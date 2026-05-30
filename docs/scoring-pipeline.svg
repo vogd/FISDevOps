@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 850" width="1600" height="850" font-family="Arial, sans-serif">
+
+  <!-- ==================== STAGE 1: KEYWORD MATCH ==================== -->
+  <rect x="30" y="60" width="340" height="310" rx="12" fill="#EDE7F6" stroke="#7E57C2" stroke-width="2"/>
+  <text x="200" y="88" text-anchor="middle" font-size="14" font-weight="bold" fill="#4A148C">① Keyword Match (instant)</text>
+  <text x="200" y="108" text-anchor="middle" font-size="9" fill="#666" font-style="italic">In-process (orchestrator.py) — no network call</text>
+
+  <!-- Orchestrator -->
+  <rect x="50" y="130" width="120" height="50" rx="6" fill="#ED7100" stroke="#fff" stroke-width="1.5"/>
+  <text x="110" y="152" text-anchor="middle" font-size="10" fill="#fff" font-weight="bold">λ Orchestrator</text>
+  <text x="110" y="167" text-anchor="middle" font-size="9" fill="#fff">(Python)</text>
+
+  <!-- Ground truth -->
+  <rect x="195" y="130" width="155" height="50" rx="6" fill="#FFF9C4" stroke="#F9A825" stroke-width="1.5"/>
+  <text x="272" y="148" text-anchor="middle" font-size="9" font-weight="bold" fill="#333">ground_truth</text>
+  <text x="272" y="162" text-anchor="middle" font-size="8" fill="#555">(from experiments.json)</text>
+  <text x="272" y="175" text-anchor="middle" font-size="8" fill="#555">e.g. "cpu_pressure"</text>
+
+  <!-- Logic -->
+  <rect x="50" y="200" width="200" height="75" rx="6" fill="#F3E5F5" stroke="#7E57C2" stroke-width="1"/>
+  <text x="60" y="218" font-size="9" font-weight="bold" fill="#333">Logic:</text>
+  <text x="60" y="235" font-size="8" fill="#333">Split ground_truth on "_"</text>
+  <text x="60" y="250" font-size="8" fill="#333">→ ["cpu", "pressure"]</text>
+  <text x="60" y="265" font-size="8" fill="#333">any(kw in agent_rca.lower())?</text>
+
+  <!-- Output 1 -->
+  <rect x="265" y="210" width="95" height="55" rx="6" fill="#E8F5E9" stroke="#43A047" stroke-width="1.5"/>
+  <text x="312" y="230" text-anchor="middle" font-size="8" font-weight="bold" fill="#2E7D32">Output:</text>
+  <text x="312" y="245" text-anchor="middle" font-size="8" fill="#333">agent_match</text>
+  <text x="312" y="260" text-anchor="middle" font-size="8" fill="#333">= True / False</text>
+
+  <!-- Arrows stage 1 -->
+  <line x1="170" y1="155" x2="195" y2="155" stroke="#7E57C2" stroke-width="1.5" marker-end="url(#arr-purple)"/>
+  <line x1="110" y1="180" x2="110" y2="200" stroke="#7E57C2" stroke-width="1.5" marker-end="url(#arr-purple)"/>
+  <line x1="250" y1="237" x2="265" y2="237" stroke="#43A047" stroke-width="1.5" marker-end="url(#arr-green)"/>
+
+  <!-- ==================== STAGE 2: OPUS ASSESSMENT ==================== -->
+  <rect x="410" y="60" width="480" height="430" rx="12" fill="#E3F2FD" stroke="#1565C0" stroke-width="2"/>
+  <text x="650" y="88" text-anchor="middle" font-size="14" font-weight="bold" fill="#0D47A1">② Opus Assessment (Bedrock)</text>
+  <text x="650" y="108" text-anchor="middle" font-size="9" fill="#666" font-style="italic">Called from orchestrator &amp; Lambda scorer</text>
+
+  <!-- Prompt inputs (left column) -->
+  <rect x="430" y="125" width="210" height="150" rx="6" fill="#FFF9C4" stroke="#F9A825" stroke-width="1.5"/>
+  <text x="445" y="143" font-size="9" font-weight="bold" fill="#333">Prompt Inputs:</text>
+  <text x="445" y="161" font-size="8" fill="#555">• experiment_name</text>
+  <text x="445" y="176" font-size="8" fill="#555">• ground_truth</text>
+  <text x="445" y="191" font-size="8" fill="#555">  (e.g. "cpu_pressure")</text>
+  <text x="445" y="206" font-size="8" fill="#555">• description</text>
+  <text x="445" y="221" font-size="8" fill="#555">  (from experiments.json)</text>
+  <text x="445" y="236" font-size="8" fill="#555">• agent_rca</text>
+  <text x="445" y="251" font-size="8" fill="#555">  (first 3000 chars of RCA)</text>
+  <text x="445" y="266" font-size="8" fill="#555">• FIS template description</text>
+
+  <!-- Bedrock (right column) -->
+  <rect x="670" y="125" width="195" height="70" rx="6" fill="#01A88D" stroke="#fff" stroke-width="1.5"/>
+  <text x="767" y="148" text-anchor="middle" font-size="11" fill="#fff" font-weight="bold">Amazon Bedrock</text>
+  <text x="767" y="165" text-anchor="middle" font-size="9" fill="#E0F2F1">bedrock-runtime</text>
+  <text x="767" y="182" text-anchor="middle" font-size="8" fill="#E0F2F1">InvokeModel API</text>
+
+  <!-- Model details -->
+  <rect x="670" y="210" width="195" height="100" rx="6" fill="#E0F2F1" stroke="#00897B" stroke-width="1.5"/>
+  <text x="685" y="228" font-size="9" font-weight="bold" fill="#004D40">Model Config:</text>
+  <text x="685" y="246" font-size="8" fill="#333">us.anthropic.claude-sonnet-4-6</text>
+  <text x="685" y="262" font-size="8" fill="#0D47A1" font-weight="bold">↑ Cross-Region Inference Profile</text>
+  <text x="685" y="280" font-size="8" fill="#333">Region: us-west-2</text>
+  <text x="685" y="295" font-size="8" fill="#333">max_tokens: 256</text>
+
+  <!-- Prompt design (below inputs) -->
+  <rect x="430" y="290" width="210" height="185" rx="6" fill="#E8EAF6" stroke="#3F51B5" stroke-width="1.5"/>
+  <text x="445" y="308" font-size="9" font-weight="bold" fill="#1A237E">Prompt Design:</text>
+  <text x="445" y="326" font-size="8" fill="#333">• Expert SRE persona</text>
+  <text x="445" y="342" font-size="8" fill="#333">• 10 failure category defs:</text>
+  <text x="445" y="356" font-size="8" fill="#555">  pod_failure, cpu_pressure,</text>
+  <text x="445" y="370" font-size="8" fill="#555">  network_latency, http_fault...</text>
+  <text x="445" y="388" font-size="8" fill="#333">• Correct vs wrong examples</text>
+  <text x="445" y="404" font-size="8" fill="#333">• "Ignore injection tool"</text>
+  <text x="445" y="420" font-size="8" fill="#333">• Symptom vs Root Cause</text>
+  <text x="445" y="436" font-size="8" fill="#333">• JSON output enforced</text>
+  <text x="445" y="454" font-size="8" fill="#333">• 3 scores: yes|partially|no</text>
+  <text x="445" y="470" font-size="8" fill="#333">• reasoning: one sentence</text>
+
+  <!-- Opus output -->
+  <rect x="670" y="330" width="195" height="65" rx="6" fill="#E8F5E9" stroke="#43A047" stroke-width="1.5"/>
+  <text x="767" y="350" text-anchor="middle" font-size="9" font-weight="bold" fill="#2E7D32">Output:</text>
+  <text x="767" y="368" text-anchor="middle" font-size="9" fill="#333">opus_score: yes | partially | no</text>
+  <text x="767" y="385" text-anchor="middle" font-size="8" fill="#555">opus_reasoning: "one sentence"</text>
+
+  <!-- Arrows stage 2 -->
+  <line x1="640" y1="190" x2="670" y2="160" stroke="#1565C0" stroke-width="1.5" marker-end="url(#arr-blue)"/>
+  <line x1="767" y1="195" x2="767" y2="210" stroke="#00897B" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+  <line x1="767" y1="310" x2="767" y2="330" stroke="#43A047" stroke-width="1.5" marker-end="url(#arr-green)"/>
+
+  <!-- ==================== STAGE 3: LAMBDA BATCH SCORER ==================== -->
+  <rect x="930" y="60" width="640" height="430" rx="12" fill="#FFF3E0" stroke="#E65100" stroke-width="2"/>
+  <text x="1250" y="88" text-anchor="middle" font-size="14" font-weight="bold" fill="#BF360C">③ Lambda Batch Scorer (S3)</text>
+  <text x="1250" y="108" text-anchor="middle" font-size="9" fill="#666" font-style="italic">fis-chaos-scorer | Python 3.12 | 120s timeout | us-west-2</text>
+
+  <!-- Lambda icon -->
+  <rect x="950" y="130" width="120" height="50" rx="6" fill="#ED7100" stroke="#fff" stroke-width="1.5"/>
+  <text x="1010" y="152" text-anchor="middle" font-size="10" fill="#fff" font-weight="bold">λ Lambda</text>
+  <text x="1010" y="168" text-anchor="middle" font-size="8" fill="#fff">fis-chaos-scorer</text>
+
+  <!-- S3 icon -->
+  <rect x="1210" y="130" width="120" height="50" rx="6" fill="#3F8624" stroke="#fff" stroke-width="1.5"/>
+  <text x="1270" y="152" text-anchor="middle" font-size="10" fill="#fff" font-weight="bold">S3 Bucket</text>
+  <text x="1270" y="168" text-anchor="middle" font-size="8" fill="#fff">fis-chaos-results-*</text>
+
+  <!-- Reads -->
+  <rect x="950" y="200" width="220" height="160" rx="6" fill="#FFECB3" stroke="#FF8F00" stroke-width="1.5"/>
+  <text x="965" y="218" font-size="9" font-weight="bold" fill="#E65100">READS from S3:</text>
+  <text x="965" y="236" font-size="8" fill="#333" font-weight="bold">experiments/{id}/{incident}.json</text>
+  <text x="965" y="256" font-size="8" fill="#555">Contains:</text>
+  <text x="965" y="272" font-size="8" fill="#555">• experiment name, ground_truth</text>
+  <text x="965" y="287" font-size="8" fill="#555">• description, chaos_kind</text>
+  <text x="965" y="302" font-size="8" fill="#555">• devops_agent_rca (full MD)</text>
+  <text x="965" y="317" font-size="8" fill="#555">• agent_rca_snippet</text>
+  <text x="965" y="332" font-size="8" fill="#555">• fis_status, timestamps</text>
+  <text x="965" y="347" font-size="8" fill="#555">• errors[], mitigation data</text>
+
+  <!-- Writes -->
+  <rect x="1210" y="200" width="220" height="145" rx="6" fill="#E8F5E9" stroke="#2E7D32" stroke-width="1.5"/>
+  <text x="1225" y="218" font-size="9" font-weight="bold" fill="#2E7D32">WRITES to S3:</text>
+  <text x="1225" y="236" font-size="8" fill="#333" font-weight="bold">scorecards/latest.json</text>
+  <text x="1225" y="256" font-size="8" fill="#555">Contains:</text>
+  <text x="1225" y="272" font-size="8" fill="#555">• total, correct, partial, wrong</text>
+  <text x="1225" y="287" font-size="8" fill="#555">• results[] per experiment:</text>
+  <text x="1225" y="302" font-size="8" fill="#555">  - opus_score + reasoning</text>
+  <text x="1225" y="317" font-size="8" fill="#555">  - experiment metadata</text>
+  <text x="1225" y="332" font-size="8" fill="#555">  - full RCA text + snippet</text>
+
+  <!-- Bedrock from Lambda -->
+  <rect x="950" y="390" width="120" height="50" rx="6" fill="#01A88D" stroke="#fff" stroke-width="1.5"/>
+  <text x="1010" y="412" text-anchor="middle" font-size="9" fill="#fff" font-weight="bold">Bedrock</text>
+  <text x="1010" y="428" text-anchor="middle" font-size="8" fill="#E0F2F1">InvokeModel (loop)</text>
+
+  <!-- IAM role -->
+  <rect x="1100" y="390" width="170" height="80" rx="6" fill="#FCE4EC" stroke="#C62828" stroke-width="1.5"/>
+  <text x="1115" y="410" font-size="9" font-weight="bold" fill="#B71C1C">IAM: fis-chaos-scorer</text>
+  <text x="1115" y="428" font-size="8" fill="#333">• s3:GetObject</text>
+  <text x="1115" y="443" font-size="8" fill="#333">• s3:PutObject, s3:ListBucket</text>
+  <text x="1115" y="458" font-size="8" fill="#333">• bedrock:InvokeModel</text>
+
+  <!-- Arrows stage 3 -->
+  <line x1="1010" y1="180" x2="1010" y2="200" stroke="#E65100" stroke-width="1.5" marker-end="url(#arr-orange)"/>
+  <text x="1020" y="195" font-size="7" fill="#E65100">ListObjects+GetObject</text>
+  <line x1="1270" y1="180" x2="1270" y2="200" stroke="#2E7D32" stroke-width="1.5" marker-end="url(#arr-green)"/>
+  <text x="1280" y="195" font-size="7" fill="#2E7D32">PutObject</text>
+  <line x1="1010" y1="360" x2="1010" y2="390" stroke="#01A88D" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+  <text x="1020" y="380" font-size="7" fill="#01A88D">per experiment</text>
+
+  <!-- ==================== HA BOX ==================== -->
+  <rect x="30" y="520" width="1540" height="180" rx="10" fill="#FAFAFA" stroke="#9E9E9E" stroke-width="2" stroke-dasharray="6,3"/>
+  <text x="50" y="548" font-size="13" font-weight="bold" fill="#37474F">HA / Cross-Regional Status</text>
+  
+  <text x="60" y="575" font-size="10" fill="#455A64">• Model ID "us.anthropic.claude-sonnet-4-6" = Cross-Region Inference Profile → AWS routes to available US capacity automatically</text>
+  <text x="60" y="598" font-size="10" fill="#455A64">• Bedrock client endpoint: us-west-2 (single SDK call) — model routing is cross-regional under the hood</text>
+  <text x="60" y="621" font-size="10" fill="#455A64">• Lambda scorer: deployed us-west-2 ONLY — not replicated</text>
+  <text x="60" y="644" font-size="10" fill="#455A64">• S3 bucket: single region (us-west-2) — Agent Skills in BOTH regions read cross-region via bucket policy</text>
+  <text x="60" y="667" font-size="10" fill="#C62828" font-weight="bold">• Scoring is NOT fully HA — if us-west-2 is unavailable, scoring halts. Investigation IS HA (EventBridge Global Endpoint).</text>
+  <text x="60" y="690" font-size="10" fill="#1565C0">• Scoring is a non-critical post-process — incidents are still investigated and mitigated even if scorer is down.</text>
+
+  <!-- Flow arrows between stages -->
+  <path d="M 360 240 Q 385 240 410 200" stroke="#333" stroke-width="2.5" fill="none" marker-end="url(#arr-black)"/>
+  <text x="372" y="225" font-size="8" fill="#333" font-weight="bold">if RCA exists →</text>
+  
+  <path d="M 865 360 Q 897 360 930 300" stroke="#333" stroke-width="2.5" fill="none" marker-end="url(#arr-black)"/>
+  <text x="880" y="320" font-size="8" fill="#333" font-weight="bold">batch →</text>
+
+  <!-- Arrow markers -->
+  <defs>
+    <marker id="arr-purple" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#7E57C2"/></marker>
+    <marker id="arr-green" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#43A047"/></marker>
+    <marker id="arr-blue" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#1565C0"/></marker>
+    <marker id="arr-teal" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#01A88D"/></marker>
+    <marker id="arr-orange" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#E65100"/></marker>
+    <marker id="arr-black" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#333"/></marker>
+  </defs>
+</svg>

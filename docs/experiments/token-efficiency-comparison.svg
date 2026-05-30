@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 620" width="1000" height="620" font-family="Arial, sans-serif">
+
+  <!-- Title -->
+  <text x="500" y="24" text-anchor="middle" font-size="16" font-weight="bold" fill="#FFFFFF">Token Efficiency: S3 Skill vs MCP Server</text>
+  <text x="500" y="44" text-anchor="middle" font-size="11" fill="#B0BEC5" font-style="italic">Context window consumption for 10 historical incidents (same service)</text>
+
+  <!-- ==================== BAR CHART ==================== -->
+  <!-- Y-axis -->
+  <line x1="120" y1="75" x2="120" y2="340" stroke="#455A64" stroke-width="1"/>
+  <text x="55" y="210" text-anchor="middle" font-size="11" fill="#B0BEC5" transform="rotate(-90,55,210)">Tokens consumed</text>
+
+  <!-- Y-axis labels -->
+  <text x="110" y="80" text-anchor="end" font-size="10" fill="#B0BEC5">20,000</text>
+  <line x1="115" y1="77" x2="120" y2="77" stroke="#455A64" stroke-width="1"/>
+  <line x1="120" y1="77" x2="750" y2="77" stroke="#333" stroke-width="0.5" stroke-dasharray="3,3"/>
+
+  <text x="110" y="143" text-anchor="end" font-size="10" fill="#B0BEC5">15,000</text>
+  <line x1="115" y1="140" x2="120" y2="140" stroke="#455A64" stroke-width="1"/>
+  <line x1="120" y1="140" x2="750" y2="140" stroke="#333" stroke-width="0.5" stroke-dasharray="3,3"/>
+
+  <text x="110" y="209" text-anchor="end" font-size="10" fill="#B0BEC5">10,000</text>
+  <line x1="115" y1="206" x2="120" y2="206" stroke="#455A64" stroke-width="1"/>
+  <line x1="120" y1="206" x2="750" y2="206" stroke="#333" stroke-width="0.5" stroke-dasharray="3,3"/>
+
+  <text x="110" y="275" text-anchor="end" font-size="10" fill="#B0BEC5">5,000</text>
+  <line x1="115" y1="272" x2="120" y2="272" stroke="#455A64" stroke-width="1"/>
+  <line x1="120" y1="272" x2="750" y2="272" stroke="#333" stroke-width="0.5" stroke-dasharray="3,3"/>
+
+  <text x="110" y="340" text-anchor="end" font-size="10" fill="#B0BEC5">0</text>
+  <line x1="120" y1="337" x2="750" y2="337" stroke="#455A64" stroke-width="1"/>
+
+  <!-- Scale: 20000 tokens = 260px. 1 token = 0.013px -->
+  <!-- S3 (10 files): 19,400 → 252px. Y = 337-252 = 85 -->
+  <rect x="200" y="85" width="140" height="252" rx="4" fill="#C62828" opacity="0.9"/>
+  <text x="270" y="75" text-anchor="middle" font-size="14" fill="#EF9A9A" font-weight="bold">19,400</text>
+  <text x="270" y="360" text-anchor="middle" font-size="12" fill="#E0E0E0" font-weight="bold">S3 Skill</text>
+  <text x="270" y="376" text-anchor="middle" font-size="10" fill="#B0BEC5">(10 full files)</text>
+
+  <!-- S3 (3 files): 6,380 → 83px. Y = 337-83 = 254 -->
+  <rect x="400" y="254" width="140" height="83" rx="4" fill="#E65100" opacity="0.9"/>
+  <text x="470" y="244" text-anchor="middle" font-size="14" fill="#FFB74D" font-weight="bold">6,380</text>
+  <text x="470" y="360" text-anchor="middle" font-size="12" fill="#E0E0E0" font-weight="bold">S3 Skill</text>
+  <text x="470" y="376" text-anchor="middle" font-size="10" fill="#B0BEC5">(3 files practical)</text>
+
+  <!-- MCP: 530 → 7px. Y = 337-7 = 330 -->
+  <rect x="600" y="330" width="140" height="7" rx="2" fill="#2E7D32" opacity="0.9"/>
+  <text x="670" y="320" text-anchor="middle" font-size="14" fill="#A5D6A7" font-weight="bold">530</text>
+  <text x="670" y="360" text-anchor="middle" font-size="12" fill="#E0E0E0" font-weight="bold">MCP Server</text>
+  <text x="670" y="376" text-anchor="middle" font-size="10" fill="#B0BEC5">(on-demand)</text>
+
+  <!-- Efficiency label -->
+  <rect x="790" y="100" width="190" height="60" rx="6" fill="none" stroke="#A5D6A7" stroke-width="1"/>
+  <text x="885" y="120" text-anchor="middle" font-size="11" fill="#B0BEC5">MCP vs S3 (10 files):</text>
+  <text x="885" y="140" text-anchor="middle" font-size="14" fill="#A5D6A7" font-weight="bold">37× fewer tokens</text>
+  <text x="885" y="155" text-anchor="middle" font-size="10" fill="#B0BEC5">530 vs 19,400</text>
+
+  <!-- ==================== BREAKDOWN TABLE ==================== -->
+  <text x="500" y="410" text-anchor="middle" font-size="14" font-weight="bold" fill="#90CAF9">What Enters the Context Window</text>
+
+  <!-- Header -->
+  <rect x="20" y="425" width="230" height="28" rx="4" fill="#37474F"/>
+  <rect x="250" y="425" width="370" height="28" rx="4" fill="#C62828" opacity="0.5"/>
+  <rect x="620" y="425" width="360" height="28" rx="4" fill="#2E7D32" opacity="0.5"/>
+  <text x="135" y="444" text-anchor="middle" font-size="11" fill="#fff" font-weight="bold">Stage</text>
+  <text x="435" y="444" text-anchor="middle" font-size="11" fill="#fff" font-weight="bold">S3 Skill (built-in direct read)</text>
+  <text x="800" y="444" text-anchor="middle" font-size="11" fill="#fff" font-weight="bold">MCP Server (Lambda + Function URL)</text>
+
+  <!-- Row 1: When loaded -->
+  <rect x="20" y="453" width="230" height="28" fill="none" stroke="#455A64" stroke-width="0.5"/>
+  <rect x="250" y="453" width="370" height="28" fill="none" stroke="#455A64" stroke-width="0.5"/>
+  <rect x="620" y="453" width="360" height="28" fill="none" stroke="#455A64" stroke-width="0.5"/>
+  <text x="30" y="471" font-size="11" fill="#90CAF9">When loaded</text>
+  <text x="260" y="471" font-size="11" fill="#EF9A9A">Always at investigation start (500 tokens)</text>
+  <text x="630" y="471" font-size="11" fill="#A5D6A7">Tool description only (100 tokens)</text>
+
+  <!-- Row 2: When data fetched -->
+  <rect x="20" y="481" width="230" height="28" fill="none" stroke="#455A64" stroke-width="0.5"/>
+  <rect x="250" y="481" width="370" height="28" fill="none" stroke="#455A64" stroke-width="0.5"/>
+  <rect x="620" y="481" width="360" height="28" fill="none" stroke="#455A64" stroke-width="0.5"/>
+  <text x="30" y="499" font-size="11" fill="#90CAF9">When data fetched</text>
+  <text x="260" y="499" font-size="11" fill="#EF9A9A">Immediately (skill says "read now")</text>
+  <text x="630" y="499" font-size="11" fill="#A5D6A7">Only if agent decides it's useful</text>
+
+  <!-- Row 3: What enters context -->
+  <rect x="20" y="509" width="230" height="28" fill="none" stroke="#455A64" stroke-width="0.5"/>
+  <rect x="250" y="509" width="370" height="28" fill="none" stroke="#455A64" stroke-width="0.5"/>
+  <rect x="620" y="509" width="360" height="28" fill="none" stroke="#455A64" stroke-width="0.5"/>
+  <text x="30" y="527" font-size="11" fill="#90CAF9">What enters context</text>
+  <text x="260" y="527" font-size="11" fill="#EF9A9A">Entire file (~1,860 tokens × N files)</text>
+  <text x="630" y="527" font-size="11" fill="#A5D6A7">Server's curated response (400 tokens)</text>
+
+  <!-- Row 4: Who filters -->
+  <rect x="20" y="537" width="230" height="28" fill="none" stroke="#455A64" stroke-width="0.5"/>
+  <rect x="250" y="537" width="370" height="28" fill="none" stroke="#455A64" stroke-width="0.5"/>
+  <rect x="620" y="537" width="360" height="28" fill="none" stroke="#455A64" stroke-width="0.5"/>
+  <text x="30" y="555" font-size="11" fill="#90CAF9">Who filters</text>
+  <text x="260" y="555" font-size="11" fill="#EF9A9A">Agent (in-context, after reading all)</text>
+  <text x="630" y="555" font-size="11" fill="#A5D6A7">Server (outside context window)</text>
+
+  <!-- Row 5: If not needed -->
+  <rect x="20" y="565" width="230" height="28" fill="none" stroke="#455A64" stroke-width="0.5"/>
+  <rect x="250" y="565" width="370" height="28" fill="none" stroke="#455A64" stroke-width="0.5"/>
+  <rect x="620" y="565" width="360" height="28" fill="none" stroke="#455A64" stroke-width="0.5"/>
+  <text x="30" y="583" font-size="11" fill="#90CAF9">If history not needed</text>
+  <text x="260" y="583" font-size="11" fill="#EF9A9A">~6,380 tokens wasted (already read)</text>
+  <text x="630" y="583" font-size="11" fill="#A5D6A7">100 tokens only (description idle)</text>
+
+  <!-- Disclaimer -->
+  <text x="500" y="612" text-anchor="middle" font-size="9" fill="#616161">1 token ≈ 3.5 chars (JSON/md). Avg investigation: ~6,500 chars (~1,860 tokens). Based on measured investigation_summary_md + investigation_summary from DevOps Agent API.</text>
+
+</svg>

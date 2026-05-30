@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1500 900" width="1500" height="900" font-family="Arial, sans-serif">
+
+  <!-- ==================== TOP: ALERTS FLOW IN ==================== -->
+  <!-- Alert sources -->
+  <rect x="20" y="20" width="120" height="40" rx="6" fill="#E91E63"/>
+  <text x="80" y="37" text-anchor="middle" font-size="10" fill="#fff" font-weight="bold">Alert 1</text>
+  <text x="80" y="52" text-anchor="middle" font-size="9" fill="#FCE4EC">cpu-stress-svc</text>
+
+  <rect x="20" y="75" width="120" height="40" rx="6" fill="#E91E63"/>
+  <text x="80" y="92" text-anchor="middle" font-size="10" fill="#fff" font-weight="bold">Alert 2 (same)</text>
+  <text x="80" y="107" text-anchor="middle" font-size="9" fill="#FCE4EC">cpu-stress-svc</text>
+
+  <rect x="20" y="130" width="120" height="40" rx="6" fill="#FF9800"/>
+  <text x="80" y="147" text-anchor="middle" font-size="10" fill="#fff" font-weight="bold">Alert 3 (diff)</text>
+  <text x="80" y="162" text-anchor="middle" font-size="9" fill="#FFF3E0">pod-kill-svc</text>
+
+  <!-- Global Endpoint -->
+  <rect x="200" y="55" width="160" height="70" rx="8" fill="#9C27B0"/>
+  <text x="280" y="80" text-anchor="middle" font-size="11" fill="#fff" font-weight="bold">EventBridge</text>
+  <text x="280" y="96" text-anchor="middle" font-size="11" fill="#fff" font-weight="bold">Global Endpoint</text>
+  <text x="280" y="112" text-anchor="middle" font-size="9" fill="#E1BEE7">Route53 HC routing</text>
+
+  <!-- Arrows to global -->
+  <line x1="140" y1="40" x2="198" y2="75" stroke="#F48FB1" stroke-width="1.5" marker-end="url(#a1)"/>
+  <line x1="140" y1="95" x2="198" y2="90" stroke="#F48FB1" stroke-width="1.5" marker-end="url(#a1)"/>
+  <line x1="140" y1="150" x2="198" y2="110" stroke="#FFB74D" stroke-width="1.5" marker-end="url(#a1)"/>
+
+  <!-- ==================== WORKSPACE A (primary) ==================== -->
+  <rect x="420" y="10" width="530" height="420" rx="10" fill="none" stroke="#64B5F6" stroke-width="2"/>
+  <text x="685" y="30" text-anchor="middle" font-size="13" font-weight="bold" fill="#90CAF9">Agent Workspace A (RegionA — primary)</text>
+
+  <!-- Investigation 1 -->
+  <rect x="440" y="45" width="240" height="155" rx="6" fill="none" stroke="#64B5F6" stroke-width="1.5"/>
+  <text x="560" y="63" text-anchor="middle" font-size="11" fill="#90CAF9" font-weight="bold">Investigation 1 (Alert 1)</text>
+  <text x="560" y="80" text-anchor="middle" font-size="9" fill="#B0BEC5">task_id: abc-111</text>
+
+  <rect x="450" y="90" width="220" height="30" rx="4" fill="none" stroke="#FFD54F" stroke-width="1"/>
+  <text x="460" y="109" font-size="10" fill="#FFD54F">Context Window: K8s + CW + CT</text>
+
+  <rect x="450" y="125" width="220" height="30" rx="4" fill="none" stroke="#A5D6A7" stroke-width="1"/>
+  <text x="460" y="144" font-size="10" fill="#A5D6A7">→ Produces RCA (new)</text>
+
+  <rect x="450" y="160" width="220" height="30" rx="4" fill="#2E7D32"/>
+  <text x="560" y="179" text-anchor="middle" font-size="10" fill="#fff" font-weight="bold">✓ RCA Ready</text>
+
+  <!-- Investigation 2 (linked) -->
+  <rect x="700" y="45" width="240" height="155" rx="6" fill="none" stroke="#64B5F6" stroke-width="1.5" stroke-dasharray="5,3"/>
+  <text x="820" y="63" text-anchor="middle" font-size="11" fill="#90CAF9" font-weight="bold">Investigation 2 (Alert 2)</text>
+  <text x="820" y="80" text-anchor="middle" font-size="9" fill="#B0BEC5">LINKED → task_id: abc-111</text>
+
+  <rect x="710" y="90" width="220" height="30" rx="4" fill="none" stroke="#FFD54F" stroke-width="1"/>
+  <text x="720" y="109" font-size="10" fill="#FFD54F">Same issue detected</text>
+
+  <rect x="710" y="125" width="220" height="30" rx="4" fill="none" stroke="#CE93D8" stroke-width="1"/>
+  <text x="720" y="144" font-size="10" fill="#CE93D8">Links to Investigation 1's RCA</text>
+
+  <rect x="710" y="160" width="220" height="30" rx="4" fill="#1565C0"/>
+  <text x="820" y="179" text-anchor="middle" font-size="10" fill="#fff" font-weight="bold">LINKED (uses existing RCA)</text>
+
+  <!-- Link arrow between inv 1 and 2 -->
+  <line x1="670" y1="175" x2="708" y2="175" stroke="#CE93D8" stroke-width="2" stroke-dasharray="4,2" marker-end="url(#a2)"/>
+  <text x="689" y="167" text-anchor="middle" font-size="8" fill="#CE93D8">linked</text>
+
+  <!-- Mitigation for 1+2 (same task) -->
+  <rect x="440" y="220" width="500" height="70" rx="6" fill="none" stroke="#FFB74D" stroke-width="1.5"/>
+  <text x="690" y="240" text-anchor="middle" font-size="11" fill="#FFD54F" font-weight="bold">Mitigation (task_id: abc-111)</text>
+  <text x="690" y="258" text-anchor="middle" font-size="10" fill="#E0E0E0">ACP → Agent generates mitigation for linked pair</text>
+  <text x="690" y="275" text-anchor="middle" font-size="10" fill="#B0BEC5">Single mitigation covers both alerts (same root cause)</text>
+  <text x="690" y="290" text-anchor="middle" font-size="9" fill="#81C784">→ mitigation_summary_md → S3</text>
+
+  <!-- S3 write from workspace A -->
+  <rect x="440" y="310" width="200" height="45" rx="6" fill="#3F8624"/>
+  <text x="540" y="330" text-anchor="middle" font-size="10" fill="#fff" font-weight="bold">S3: fis-chaos-results</text>
+  <text x="540" y="346" text-anchor="middle" font-size="9" fill="#C8E6C9">RCA + mitigation stored</text>
+
+  <!-- Arrow inv1 → S3 -->
+  <line x1="540" y1="190" x2="540" y2="218" stroke="#81C784" stroke-width="1.5" marker-end="url(#a3)"/>
+  <line x1="540" y1="290" x2="540" y2="308" stroke="#81C784" stroke-width="1.5" marker-end="url(#a3)"/>
+
+  <!-- ==================== WORKSPACE B (secondary) ==================== -->
+  <rect x="980" y="10" width="500" height="420" rx="10" fill="none" stroke="#66BB6A" stroke-width="2"/>
+  <text x="1230" y="30" text-anchor="middle" font-size="13" font-weight="bold" fill="#A5D6A7">Agent Workspace B (RegionB — secondary)</text>
+
+  <!-- Investigation 3 -->
+  <rect x="1000" y="45" width="460" height="195" rx="6" fill="none" stroke="#66BB6A" stroke-width="1.5"/>
+  <text x="1230" y="63" text-anchor="middle" font-size="11" fill="#A5D6A7" font-weight="bold">Investigation 3 (Alert 3 — different service)</text>
+  <text x="1230" y="80" text-anchor="middle" font-size="9" fill="#B0BEC5">task_id: xyz-999 (different workspace = different task)</text>
+
+  <rect x="1010" y="92" width="220" height="30" rx="4" fill="none" stroke="#FFD54F" stroke-width="1"/>
+  <text x="1020" y="111" font-size="10" fill="#FFD54F">Context Window: K8s + CW + CT</text>
+
+  <rect x="1250" y="92" width="195" height="55" rx="4" fill="none" stroke="#90CAF9" stroke-width="1"/>
+  <text x="1260" y="109" font-size="10" fill="#90CAF9" font-weight="bold">Reads prior RCA:</text>
+  <text x="1260" y="125" font-size="9" fill="#E0E0E0">S3 Skill (direct) or</text>
+  <text x="1260" y="139" font-size="9" fill="#A5D6A7">MCP (37× fewer tokens)</text>
+
+  <rect x="1010" y="155" width="220" height="30" rx="4" fill="none" stroke="#A5D6A7" stroke-width="1"/>
+  <text x="1020" y="174" font-size="10" fill="#A5D6A7">→ Produces own RCA (informed by history)</text>
+
+  <rect x="1010" y="195" width="220" height="30" rx="4" fill="#2E7D32"/>
+  <text x="1120" y="214" text-anchor="middle" font-size="10" fill="#fff" font-weight="bold">✓ RCA Ready (history-informed)</text>
+
+  <!-- Why different task_id callout -->
+  <rect x="1250" y="155" width="195" height="70" rx="4" fill="none" stroke="#FFD54F" stroke-width="1" stroke-dasharray="4,2"/>
+  <text x="1260" y="172" font-size="9" fill="#FFD54F" font-weight="bold">Why different task_id?</text>
+  <text x="1260" y="188" font-size="9" fill="#E0E0E0">Different agent workspace</text>
+  <text x="1260" y="202" font-size="9" fill="#E0E0E0">= different task namespace</text>
+  <text x="1260" y="216" font-size="9" fill="#B0BEC5">Cannot link across spaces</text>
+
+  <!-- Mitigation for 3 (different task) -->
+  <rect x="1000" y="260" width="460" height="55" rx="6" fill="none" stroke="#FFB74D" stroke-width="1.5"/>
+  <text x="1230" y="280" text-anchor="middle" font-size="11" fill="#FFD54F" font-weight="bold">Mitigation (task_id: xyz-999)</text>
+  <text x="1230" y="297" text-anchor="middle" font-size="10" fill="#E0E0E0">Separate ACP request → separate mitigation plan</text>
+  <text x="1230" y="312" text-anchor="middle" font-size="9" fill="#81C784">→ mitigation_summary_md → S3</text>
+
+  <!-- S3 in workspace B -->
+  <rect x="1000" y="335" width="200" height="45" rx="6" fill="#3F8624"/>
+  <text x="1100" y="355" text-anchor="middle" font-size="10" fill="#fff" font-weight="bold">S3: fis-chaos-results</text>
+  <text x="1100" y="371" text-anchor="middle" font-size="9" fill="#C8E6C9">(same bucket, cross-region)</text>
+
+  <!-- Arrow S3 → inv3 (reads history) -->
+  <path d="M 642 332 C 800 332, 900 120, 1248 120" stroke="#90CAF9" stroke-width="2" stroke-dasharray="5,3" fill="none" marker-end="url(#a4)"/>
+  <text x="900" y="200" text-anchor="middle" font-size="10" fill="#90CAF9" font-weight="bold">reads prior RCA</text>
+  <text x="900" y="215" text-anchor="middle" font-size="9" fill="#B0BEC5">(S3 Skill or MCP)</text>
+
+  <!-- ==================== ROUTING ARROWS FROM GLOBAL ENDPOINT ==================== -->
+  <line x1="360" y1="75" x2="418" y2="90" stroke="#64B5F6" stroke-width="2.5" marker-end="url(#a4)"/>
+  <text x="380" y="70" font-size="9" fill="#64B5F6">route to A</text>
+
+  <line x1="360" y1="100" x2="418" y2="100" stroke="#64B5F6" stroke-width="2.5" marker-end="url(#a4)"/>
+
+  <line x1="360" y1="110" x2="978" y2="70" stroke="#81C784" stroke-width="2.5" marker-end="url(#a5)"/>
+  <text x="650" y="55" font-size="9" fill="#81C784">route to B (different region)</text>
+
+  <!-- ==================== ORCHESTRATOR / HUMAN IN THE LOOP ==================== -->
+  <rect x="20" y="460" width="1460" height="180" rx="10" fill="none" stroke="#455A64" stroke-width="1.5" stroke-dasharray="6,3"/>
+  <text x="750" y="482" text-anchor="middle" font-size="13" font-weight="bold" fill="#90CAF9">Orchestrator (automated) or Human-in-the-Loop</text>
+
+  <!-- Orchestrator traces -->
+  <rect x="40" y="500" width="300" height="55" rx="5" fill="none" stroke="#ED7100" stroke-width="1"/>
+  <text x="50" y="517" font-size="10" fill="#FFB74D" font-weight="bold">λ Orchestrator traces:</text>
+  <text x="50" y="533" font-size="9" fill="#E0E0E0">• Sends alerts via EB Global Endpoint</text>
+  <text x="50" y="548" font-size="9" fill="#E0E0E0">• Polls DDB for status (all 3 investigations)</text>
+
+  <!-- Scoring -->
+  <rect x="360" y="500" width="300" height="55" rx="5" fill="none" stroke="#01A88D" stroke-width="1"/>
+  <text x="370" y="517" font-size="10" fill="#A5D6A7" font-weight="bold">Scoring (post-process):</text>
+  <text x="370" y="533" font-size="9" fill="#E0E0E0">• Bedrock Opus evaluates each RCA</text>
+  <text x="370" y="548" font-size="9" fill="#E0E0E0">• Scores persisted to S3 scorecards/</text>
+
+  <!-- Mitigation trigger -->
+  <rect x="680" y="500" width="340" height="55" rx="5" fill="none" stroke="#FFB74D" stroke-width="1"/>
+  <text x="690" y="517" font-size="10" fill="#FFD54F" font-weight="bold">Mitigation trigger:</text>
+  <text x="690" y="533" font-size="9" fill="#E0E0E0">• ACP request to Workspace A → task abc-111 (covers 1+2)</text>
+  <text x="690" y="548" font-size="9" fill="#E0E0E0">• ACP request to Workspace B → task xyz-999 (inv 3 only)</text>
+
+  <!-- Key insight -->
+  <rect x="1040" y="500" width="420" height="55" rx="5" fill="none" stroke="#FFD54F" stroke-width="1"/>
+  <text x="1050" y="517" font-size="10" fill="#FFD54F" font-weight="bold">Why separate mitigations?</text>
+  <text x="1050" y="533" font-size="9" fill="#E0E0E0">• Different workspace = different task namespace</text>
+  <text x="1050" y="548" font-size="9" fill="#E0E0E0">• Agent links only within its own space</text>
+
+  <!-- Timeline -->
+  <text x="50" y="580" font-size="10" fill="#90CAF9" font-weight="bold">Timeline:</text>
+  <text x="140" y="580" font-size="9" fill="#E0E0E0">Alert 1 → Inv 1 starts → Alert 2 → LINKED to Inv 1 → Inv 1 RCA ready → Alert 3 → routes to B → Inv 3 reads S3 history → Inv 3 RCA → Mitigation A (1+2) + Mitigation B (3)</text>
+
+  <!-- Legend -->
+  <rect x="50" y="600" width="12" height="12" fill="#64B5F6"/>
+  <text x="70" y="611" font-size="9" fill="#B0BEC5">Workspace A (primary)</text>
+  <rect x="220" y="600" width="12" height="12" fill="#66BB6A"/>
+  <text x="240" y="611" font-size="9" fill="#B0BEC5">Workspace B (secondary)</text>
+  <rect x="400" y="600" width="12" height="12" fill="#CE93D8"/>
+  <text x="420" y="611" font-size="9" fill="#B0BEC5">Linked investigation</text>
+  <rect x="580" y="600" width="12" height="12" fill="#FFB74D"/>
+  <text x="600" y="611" font-size="9" fill="#B0BEC5">Mitigation</text>
+
+  <!-- Markers -->
+  <defs>
+    <marker id="a1" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#F48FB1"/></marker>
+    <marker id="a2" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#CE93D8"/></marker>
+    <marker id="a3" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#81C784"/></marker>
+    <marker id="a4" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#90CAF9"/></marker>
+    <marker id="a5" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#81C784"/></marker>
+  </defs>
+</svg>

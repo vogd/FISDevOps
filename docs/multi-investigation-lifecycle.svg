@@ -1,0 +1,222 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1400 1100" font-family="Helvetica, Arial, sans-serif">
+  <!-- Background -->
+  <rect width="1400" height="1100" fill="#fafafa"/>
+  
+  <!-- Title -->
+  <text x="700" y="35" text-anchor="middle" font-size="18" font-weight="bold" fill="#232F3E">Multi-Investigation Lifecycle: Context Windows, Linking &amp; Cross-Region Routing</text>
+  <text x="700" y="55" text-anchor="middle" font-size="11" fill="#666">Human-in-the-loop orchestrator tracks all investigations via DynamoDB Global Table</text>
+  
+  <!-- ===== CALLERS ===== -->
+  <rect x="50" y="80" width="120" height="40" rx="5" fill="#fff2cc" stroke="#d6b656"/>
+  <text x="110" y="100" text-anchor="middle" font-size="9" font-weight="bold">Alert 1 (cpu-alarm)</text>
+  <text x="110" y="112" text-anchor="middle" font-size="8" fill="#666">eu-west-1 cluster</text>
+  
+  <rect x="200" y="80" width="120" height="40" rx="5" fill="#fff2cc" stroke="#d6b656"/>
+  <text x="260" y="100" text-anchor="middle" font-size="9" font-weight="bold">Alert 2 (cpu-alarm)</text>
+  <text x="260" y="112" text-anchor="middle" font-size="8" fill="#666">same cluster, 2min later</text>
+  
+  <rect x="380" y="80" width="120" height="40" rx="5" fill="#ffe6cc" stroke="#d79b00"/>
+  <text x="440" y="100" text-anchor="middle" font-size="9" font-weight="bold">Alert 3 (cpu-alarm)</text>
+  <text x="440" y="112" text-anchor="middle" font-size="8" fill="#666">eu-central-1 cluster</text>
+
+  <!-- ===== GLOBAL ENDPOINT ===== -->
+  <rect x="150" y="150" width="350" height="35" rx="5" fill="#e1d5e7" stroke="#9673a6" stroke-width="2"/>
+  <text x="325" y="172" text-anchor="middle" font-size="11" font-weight="bold" fill="#9673a6">EventBridge Global Endpoint (single URL)</text>
+  
+  <!-- Arrows from alerts to GE -->
+  <line x1="110" y1="120" x2="250" y2="150" stroke="#666" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <line x1="260" y1="120" x2="300" y2="150" stroke="#666" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <line x1="440" y1="120" x2="400" y2="150" stroke="#666" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+  <!-- ===== ROUTING DECISION ===== -->
+  <line x1="250" y1="185" x2="180" y2="220" stroke="#6c8ebf" stroke-width="2" marker-end="url(#arrow)"/>
+  <line x1="300" y1="185" x2="300" y2="220" stroke="#6c8ebf" stroke-width="2" marker-end="url(#arrow)"/>
+  <line x1="400" y1="185" x2="500" y2="220" stroke="#82b366" stroke-width="2" marker-end="url(#arrow)"/>
+  
+  <text x="160" y="210" font-size="8" fill="#6c8ebf">→ primary</text>
+  <text x="280" y="210" font-size="8" fill="#6c8ebf">→ primary</text>
+  <text x="470" y="210" font-size="8" fill="#82b366">→ secondary</text>
+
+  <!-- ===== WORKSPACE 1 (PRIMARY) ===== -->
+  <rect x="30" y="225" width="380" height="320" rx="8" fill="none" stroke="#6c8ebf" stroke-width="2" stroke-dasharray="5,3"/>
+  <text x="40" y="242" font-size="10" font-weight="bold" fill="#6c8ebf">Agent Workspace: eu-west-1 (Primary)</text>
+
+  <!-- Investigation 1 -->
+  <rect x="50" y="255" width="160" height="130" rx="5" fill="#dae8fc" stroke="#6c8ebf"/>
+  <text x="130" y="272" text-anchor="middle" font-size="9" font-weight="bold">Investigation 1</text>
+  <text x="130" y="286" text-anchor="middle" font-size="8" fill="#333">task_id: abc-111</text>
+  <rect x="60" y="295" width="140" height="55" rx="3" fill="#fff" stroke="#6c8ebf" stroke-dasharray="2,2"/>
+  <text x="130" y="308" text-anchor="middle" font-size="8" font-weight="bold" fill="#6c8ebf">Context Window 1</text>
+  <text x="130" y="320" text-anchor="middle" font-size="7" fill="#333">K8s events + CW metrics</text>
+  <text x="130" y="331" text-anchor="middle" font-size="7" fill="#333">+ Skill reads S3 history</text>
+  <text x="130" y="342" text-anchor="middle" font-size="7" fill="#333">+ Agent reasoning</text>
+  <rect x="70" y="360" width="120" height="18" rx="3" fill="#d5e8d4" stroke="#82b366"/>
+  <text x="130" y="373" text-anchor="middle" font-size="8" font-weight="bold" fill="#2e7d32">→ RCA produced ✓</text>
+
+  <!-- Investigation 2 (LINKED) -->
+  <rect x="230" y="255" width="160" height="130" rx="5" fill="#dae8fc" stroke="#6c8ebf" stroke-dasharray="4,2"/>
+  <text x="310" y="272" text-anchor="middle" font-size="9" font-weight="bold">Investigation 2</text>
+  <text x="310" y="286" text-anchor="middle" font-size="8" fill="#333">task_id: abc-222</text>
+  <rect x="240" y="295" width="140" height="55" rx="3" fill="#f5f5f5" stroke="#999" stroke-dasharray="2,2"/>
+  <text x="310" y="308" text-anchor="middle" font-size="8" font-weight="bold" fill="#999">No Context Window</text>
+  <text x="310" y="322" text-anchor="middle" font-size="7" fill="#666">Same root cause detected</text>
+  <text x="310" y="334" text-anchor="middle" font-size="7" fill="#666">→ LINKED to task abc-111</text>
+  <text x="310" y="346" text-anchor="middle" font-size="7" fill="#666">Uses Investigation 1's RCA</text>
+  <rect x="250" y="360" width="120" height="18" rx="3" fill="#fff2cc" stroke="#d6b656"/>
+  <text x="310" y="373" text-anchor="middle" font-size="8" font-weight="bold" fill="#d6b656">LINKED (no new RCA)</text>
+
+  <!-- Link arrow between inv 1 and 2 -->
+  <path d="M210 320 L230 320" stroke="#b85450" stroke-width="2" stroke-dasharray="3,2" marker-end="url(#redarrow)"/>
+  <text x="220" y="312" text-anchor="middle" font-size="7" fill="#b85450">linked</text>
+
+  <!-- Mitigation for 1+2 (shared task) -->
+  <rect x="80" y="400" width="280" height="50" rx="5" fill="#e1d5e7" stroke="#9673a6"/>
+  <text x="220" y="418" text-anchor="middle" font-size="9" font-weight="bold" fill="#9673a6">Mitigation (shared task_id: abc-111)</text>
+  <text x="220" y="432" text-anchor="middle" font-size="8" fill="#333">Covers both Alert 1 + Alert 2 (linked)</text>
+  <text x="220" y="444" text-anchor="middle" font-size="8" fill="#333">Separate context window (receives RCA as input)</text>
+  <line x1="130" y1="385" x2="180" y2="400" stroke="#9673a6" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <line x1="310" y1="385" x2="260" y2="400" stroke="#9673a6" stroke-width="1.5" stroke-dasharray="3,2" marker-end="url(#arrow)"/>
+
+  <!-- ===== WORKSPACE 2 (SECONDARY) ===== -->
+  <rect x="440" y="225" width="280" height="320" rx="8" fill="none" stroke="#82b366" stroke-width="2" stroke-dasharray="5,3"/>
+  <text x="450" y="242" font-size="10" font-weight="bold" fill="#82b366">Agent Workspace: eu-central-1 (Secondary)</text>
+
+  <!-- Investigation 3 -->
+  <rect x="460" y="255" width="240" height="160" rx="5" fill="#d5e8d4" stroke="#82b366"/>
+  <text x="580" y="272" text-anchor="middle" font-size="9" font-weight="bold">Investigation 3</text>
+  <text x="580" y="286" text-anchor="middle" font-size="8" fill="#333">task_id: xyz-333 (different workspace!)</text>
+  <rect x="470" y="295" width="220" height="80" rx="3" fill="#fff" stroke="#82b366" stroke-dasharray="2,2"/>
+  <text x="580" y="308" text-anchor="middle" font-size="8" font-weight="bold" fill="#82b366">Context Window 3</text>
+  <text x="580" y="322" text-anchor="middle" font-size="7" fill="#333">K8s events + CW metrics</text>
+  <text x="580" y="334" text-anchor="middle" font-size="7" fill="#333">+ MCP: get_historical("cpu-stress") → 400 tokens</text>
+  <text x="580" y="346" text-anchor="middle" font-size="7" fill="#333">  (reads Inv 1 RCA from S3/MCP, saves context)</text>
+  <text x="580" y="358" text-anchor="middle" font-size="7" fill="#333">+ Agent reasoning (informed by Inv 1 patterns)</text>
+  <text x="580" y="370" text-anchor="middle" font-size="7" fill="#333">→ Produces OWN RCA (not a copy)</text>
+  <rect x="500" y="385" width="160" height="18" rx="3" fill="#d5e8d4" stroke="#82b366"/>
+  <text x="580" y="398" text-anchor="middle" font-size="8" font-weight="bold" fill="#2e7d32">→ RCA produced ✓</text>
+
+  <!-- Mitigation for 3 (separate) -->
+  <rect x="480" y="430" width="220" height="50" rx="5" fill="#e1d5e7" stroke="#9673a6"/>
+  <text x="590" y="448" text-anchor="middle" font-size="9" font-weight="bold" fill="#9673a6">Mitigation (task_id: xyz-333)</text>
+  <text x="590" y="462" text-anchor="middle" font-size="8" fill="#333">Separate — different workspace, different task</text>
+  <text x="590" y="474" text-anchor="middle" font-size="8" fill="#333">Own context window with its own RCA</text>
+  <line x1="580" y1="403" x2="580" y2="430" stroke="#9673a6" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+  <!-- ===== S3 / MCP (shared knowledge) ===== -->
+  <rect x="780" y="260" width="200" height="80" rx="5" fill="#f5f5f5" stroke="#666"/>
+  <text x="880" y="280" text-anchor="middle" font-size="9" font-weight="bold">S3: fis-chaos-results</text>
+  <text x="880" y="295" text-anchor="middle" font-size="8" fill="#333">experiments/cpu-stress/inv1.json</text>
+  <text x="880" y="308" text-anchor="middle" font-size="8" fill="#333">← written by rca-writer after Inv 1</text>
+  <text x="880" y="321" text-anchor="middle" font-size="8" fill="#333">← read by Inv 3 via MCP (400 tokens)</text>
+  
+  <!-- Arrow: Inv1 writes to S3 -->
+  <path d="M210 370 C 400 370, 600 290, 780 290" fill="none" stroke="#3F8624" stroke-width="1.5" marker-end="url(#greenarrow)"/>
+  <text x="500" y="355" font-size="7" fill="#3F8624">rca-writer persists RCA</text>
+  
+  <!-- Arrow: Inv3 reads from S3/MCP -->
+  <path d="M700 330 L 780 310" fill="none" stroke="#01A88D" stroke-width="1.5" stroke-dasharray="4,2" marker-end="url(#tealarrow)"/>
+  <text x="730" y="340" font-size="7" fill="#01A88D">MCP read</text>
+
+  <!-- ===== DYNAMODB TRACKING ===== -->
+  <rect x="50" y="570" width="700" height="220" rx="8" fill="#fef9e7" stroke="#d6b656" stroke-width="2"/>
+  <text x="400" y="590" text-anchor="middle" font-size="12" font-weight="bold" fill="#d6b656">DynamoDB Global Table: fis-chaos-investigations</text>
+  <text x="400" y="605" text-anchor="middle" font-size="9" fill="#666">Tracks ALL investigations at ALL times — orchestrator polls by incident_id</text>
+
+  <!-- Table header -->
+  <rect x="70" y="620" width="660" height="20" fill="#fff2cc" stroke="#d6b656"/>
+  <text x="120" y="634" text-anchor="middle" font-size="8" font-weight="bold">incident_id</text>
+  <text x="220" y="634" text-anchor="middle" font-size="8" font-weight="bold">task_id</text>
+  <text x="310" y="634" text-anchor="middle" font-size="8" font-weight="bold">status</text>
+  <text x="400" y="634" text-anchor="middle" font-size="8" font-weight="bold">primary_task_id</text>
+  <text x="500" y="634" text-anchor="middle" font-size="8" font-weight="bold">space_id</text>
+  <text x="590" y="634" text-anchor="middle" font-size="8" font-weight="bold">region</text>
+  <text x="680" y="634" text-anchor="middle" font-size="8" font-weight="bold">routed_to</text>
+
+  <!-- Row 1: Investigation 1 -->
+  <rect x="70" y="640" width="660" height="25" fill="#dae8fc" stroke="#6c8ebf" opacity="0.3"/>
+  <text x="120" y="656" text-anchor="middle" font-size="7">fis-chaos-cpu-1001</text>
+  <text x="220" y="656" text-anchor="middle" font-size="7">abc-111</text>
+  <text x="310" y="656" text-anchor="middle" font-size="7" font-weight="bold" fill="#2e7d32">COMPLETED</text>
+  <text x="400" y="656" text-anchor="middle" font-size="7" fill="#999">—</text>
+  <text x="500" y="656" text-anchor="middle" font-size="7">primary-id</text>
+  <text x="590" y="656" text-anchor="middle" font-size="7">eu-west-1</text>
+  <text x="680" y="656" text-anchor="middle" font-size="7">primary</text>
+
+  <!-- Row 2: Investigation 2 (LINKED) -->
+  <rect x="70" y="665" width="660" height="25" fill="#fff2cc" stroke="#d6b656" opacity="0.3"/>
+  <text x="120" y="681" text-anchor="middle" font-size="7">fis-chaos-cpu-1002</text>
+  <text x="220" y="681" text-anchor="middle" font-size="7">abc-222</text>
+  <text x="310" y="681" text-anchor="middle" font-size="7" font-weight="bold" fill="#d6b656">LINKED</text>
+  <text x="400" y="681" text-anchor="middle" font-size="7" font-weight="bold" fill="#b85450">abc-111</text>
+  <text x="500" y="681" text-anchor="middle" font-size="7">primary-id</text>
+  <text x="590" y="681" text-anchor="middle" font-size="7">eu-west-1</text>
+  <text x="680" y="681" text-anchor="middle" font-size="7">primary</text>
+
+  <!-- Row 3: Investigation 3 (different workspace) -->
+  <rect x="70" y="690" width="660" height="25" fill="#d5e8d4" stroke="#82b366" opacity="0.3"/>
+  <text x="120" y="706" text-anchor="middle" font-size="7">fis-chaos-cpu-1003</text>
+  <text x="220" y="706" text-anchor="middle" font-size="7">xyz-333</text>
+  <text x="310" y="706" text-anchor="middle" font-size="7" font-weight="bold" fill="#2e7d32">COMPLETED</text>
+  <text x="400" y="706" text-anchor="middle" font-size="7" fill="#999">—</text>
+  <text x="500" y="706" text-anchor="middle" font-size="7">secondary-id</text>
+  <text x="590" y="706" text-anchor="middle" font-size="7">eu-central-1</text>
+  <text x="680" y="706" text-anchor="middle" font-size="7">secondary</text>
+
+  <!-- Annotations -->
+  <rect x="70" y="725" width="660" height="55" rx="3" fill="#fff" stroke="#999" stroke-dasharray="2,2"/>
+  <text x="80" y="740" font-size="8" font-weight="bold" fill="#333">When do we store?</text>
+  <text x="80" y="753" font-size="7" fill="#333">• Forwarder writes: incident_id + routed_to + forwarded_at (on webhook delivery)</text>
+  <text x="80" y="764" font-size="7" fill="#333">• Dispatcher writes: task_id + status + space_id + region (on each lifecycle event from EventBridge)</text>
+  <text x="80" y="775" font-size="7" fill="#333">• LINKED status includes primary_task_id — orchestrator follows it to get RCA from the primary investigation</text>
+
+  <!-- ===== WHY DIFFERENT TASK IDs ===== -->
+  <rect x="780" y="400" width="280" height="160" rx="5" fill="#fff" stroke="#333" stroke-width="1.5"/>
+  <text x="920" y="420" text-anchor="middle" font-size="10" font-weight="bold">Why Different task_ids?</text>
+  <text x="800" y="440" font-size="8" fill="#333">• task_id is per-workspace, per-incident</text>
+  <text x="800" y="455" font-size="8" fill="#333">• Inv 1+2: same workspace → agent LINKS them</text>
+  <text x="800" y="470" font-size="8" fill="#333">  (same root cause = 1 investigation)</text>
+  <text x="800" y="485" font-size="8" fill="#333">• Inv 3: different workspace → cannot link</text>
+  <text x="800" y="500" font-size="8" fill="#333">  (workspaces don't share task state)</text>
+  <text x="800" y="520" font-size="8" fill="#333">• Mitigation follows task_id:</text>
+  <text x="800" y="535" font-size="8" fill="#6c8ebf">  abc-111 → covers Inv 1 + Inv 2</text>
+  <text x="800" y="550" font-size="8" fill="#82b366">  xyz-333 → covers Inv 3 only</text>
+
+  <!-- ===== DO WE STORE AT ALL TIMES? ===== -->
+  <rect x="780" y="580" width="280" height="130" rx="5" fill="#fff" stroke="#333" stroke-width="1.5"/>
+  <text x="920" y="600" text-anchor="middle" font-size="10" font-weight="bold">Do We Store at All Times?</text>
+  <text x="800" y="620" font-size="8" fill="#333">YES — every state transition is recorded:</text>
+  <text x="800" y="638" font-size="8" fill="#666">1. PENDING_TRIAGE (Created event)</text>
+  <text x="800" y="653" font-size="8" fill="#666">2. IN_PROGRESS (investigation started)</text>
+  <text x="800" y="668" font-size="8" fill="#666">3. COMPLETED or LINKED (final state)</text>
+  <text x="800" y="683" font-size="8" fill="#666">4. MITIGATION_IN_PROGRESS</text>
+  <text x="800" y="698" font-size="8" fill="#666">5. MITIGATION_COMPLETED</text>
+
+  <!-- ===== TIMELINE ===== -->
+  <rect x="50" y="810" width="700" height="80" rx="5" fill="#f0f4ff" stroke="#6c8ebf"/>
+  <text x="400" y="830" text-anchor="middle" font-size="10" font-weight="bold" fill="#6c8ebf">Timeline (Orchestrator View via DynamoDB Polling)</text>
+  <line x1="80" y1="855" x2="720" y2="855" stroke="#333" stroke-width="1"/>
+  <!-- Timeline dots -->
+  <circle cx="100" cy="855" r="4" fill="#6c8ebf"/><text x="100" y="875" text-anchor="middle" font-size="7">t=0s</text><text x="100" y="845" text-anchor="middle" font-size="6">Alert 1</text>
+  <circle cx="180" cy="855" r="4" fill="#6c8ebf"/><text x="180" y="875" text-anchor="middle" font-size="7">t=120s</text><text x="180" y="845" text-anchor="middle" font-size="6">Alert 2</text>
+  <circle cx="250" cy="855" r="4" fill="#82b366"/><text x="250" y="875" text-anchor="middle" font-size="7">t=130s</text><text x="250" y="845" text-anchor="middle" font-size="6">Alert 3</text>
+  <circle cx="350" cy="855" r="4" fill="#d6b656"/><text x="350" y="875" text-anchor="middle" font-size="7">t=180s</text><text x="350" y="845" text-anchor="middle" font-size="6">Inv2 LINKED</text>
+  <circle cx="480" cy="855" r="4" fill="#2e7d32"/><text x="480" y="875" text-anchor="middle" font-size="7">t=600s</text><text x="480" y="845" text-anchor="middle" font-size="6">Inv1 COMPLETED</text>
+  <circle cx="560" cy="855" r="4" fill="#2e7d32"/><text x="560" y="875" text-anchor="middle" font-size="7">t=650s</text><text x="560" y="845" text-anchor="middle" font-size="6">Inv3 COMPLETED</text>
+  <circle cx="680" cy="855" r="4" fill="#9673a6"/><text x="680" y="875" text-anchor="middle" font-size="7">t=900s</text><text x="680" y="845" text-anchor="middle" font-size="6">Mitigations</text>
+
+  <!-- Arrow markers -->
+  <defs>
+    <marker id="arrow" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+      <path d="M0,0 L8,3 L0,6" fill="none" stroke="#666" stroke-width="1"/>
+    </marker>
+    <marker id="redarrow" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+      <path d="M0,0 L8,3 L0,6" fill="none" stroke="#b85450" stroke-width="1"/>
+    </marker>
+    <marker id="greenarrow" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+      <path d="M0,0 L8,3 L0,6" fill="none" stroke="#3F8624" stroke-width="1"/>
+    </marker>
+    <marker id="tealarrow" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+      <path d="M0,0 L8,3 L0,6" fill="none" stroke="#01A88D" stroke-width="1"/>
+    </marker>
+  </defs>
+</svg>

@@ -1,0 +1,23 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  namespace: chaos-mesh
+  name: fis-chaos-mesh
+rules:
+- apiGroups: ["chaos-mesh.org"]
+  resources: ["*"]
+  verbs: ["*"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: fis-chaos-mesh
+  namespace: chaos-mesh
+subjects:
+- kind: Group
+  name: fis
+  apiGroup: rbac.authorization.k8s.io
+roleRef:
+  kind: Role
+  name: fis-chaos-mesh
+  apiGroup: rbac.authorization.k8s.io

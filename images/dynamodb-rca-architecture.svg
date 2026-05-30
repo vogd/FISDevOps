@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 900" width="1200" height="900" font-family="Arial, sans-serif">
+  <defs>
+    <marker id="arrow-blue" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#2196F3"/></marker>
+    <marker id="arrow-orange" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#FF9900"/></marker>
+    <marker id="arrow-green" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#3F8624"/></marker>
+    <marker id="arrow-purple" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#9C27B0"/></marker>
+    <marker id="arrow-red" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#E74C3C"/></marker>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="900" fill="#1a1a2e"/>
+
+  <!-- Title -->
+  <text x="600" y="35" text-anchor="middle" font-size="18" font-weight="bold" fill="#FF9900">DynamoDB as Single Source of Truth — fis-chaos-investigations</text>
+  <text x="600" y="55" text-anchor="middle" font-size="12" fill="#888">Global Table (eu-west-1 + eu-central-1) • DynamoDB Streams → Neptune</text>
+
+  <!-- ==================== CENTRAL: DynamoDB Table ==================== -->
+  <rect x="420" y="340" width="360" height="220" rx="12" fill="#1B2838" stroke="#2196F3" stroke-width="2"/>
+  <!-- DynamoDB icon (simplified) -->
+  <rect x="440" y="355" width="40" height="40" rx="6" fill="#2196F3"/>
+  <text x="460" y="380" text-anchor="middle" font-size="18" fill="#fff" font-weight="bold">⬡</text>
+  <text x="495" y="372" font-size="14" fill="#90CAF9" font-weight="bold">DynamoDB</text>
+  <text x="495" y="390" font-size="10" fill="#64B5F6">fis-chaos-investigations</text>
+
+  <!-- Table fields -->
+  <text x="440" y="420" font-size="10" fill="#FFD54F" font-weight="bold">PK: incident_id</text>
+  <text x="440" y="438" font-size="9" fill="#B0BEC5">GSI: task_id-index</text>
+  <line x1="440" y1="445" x2="760" y2="445" stroke="#455A64" stroke-width="0.5"/>
+  <text x="440" y="462" font-size="9" fill="#E0E0E0">task_id, execution_id, space_id, region</text>
+  <text x="440" y="478" font-size="9" fill="#E0E0E0">detail_type (status), last_updated</text>
+  <text x="440" y="494" font-size="9" fill="#E0E0E0">routed_to, forwarded_at</text>
+  <text x="440" y="510" font-size="9" fill="#E0E0E0">affected_resources [ ], cascade_graph [ ]</text>
+  <text x="440" y="526" font-size="9" fill="#E0E0E0">resource_arns [ ]</text>
+  <text x="440" y="545" font-size="9" fill="#64B5F6" font-style="italic">TTL: ttl (auto-expire old records)</text>
+
+  <!-- ==================== WRITERS (LEFT SIDE) ==================== -->
+  <text x="150" y="90" text-anchor="middle" font-size="14" font-weight="bold" fill="#4CAF50">WRITERS</text>
+
+  <!-- 1. Global Forwarder -->
+  <rect x="40" y="120" width="220" height="65" rx="8" fill="#1B2838" stroke="#FF9900" stroke-width="1.5"/>
+  <rect x="55" y="132" width="28" height="28" rx="4" fill="#FF9900"/>
+  <text x="69" y="151" text-anchor="middle" font-size="12" fill="#fff">λ</text>
+  <text x="95" y="145" font-size="11" fill="#FFD54F" font-weight="bold">global_forwarder</text>
+  <text x="95" y="162" font-size="9" fill="#B0BEC5">On incident forwarding</text>
+  <text x="55" y="178" font-size="8" fill="#A5D6A7">→ incident_id, routed_to, forwarded_at</text>
+
+  <!-- 2. Dispatcher -->
+  <rect x="40" y="220" width="220" height="65" rx="8" fill="#1B2838" stroke="#FF9900" stroke-width="1.5"/>
+  <rect x="55" y="232" width="28" height="28" rx="4" fill="#FF9900"/>
+  <text x="69" y="251" text-anchor="middle" font-size="12" fill="#fff">λ</text>
+  <text x="95" y="245" font-size="11" fill="#FFD54F" font-weight="bold">dispatcher</text>
+  <text x="95" y="262" font-size="9" fill="#B0BEC5">On every lifecycle event (SQS)</text>
+  <text x="55" y="278" font-size="8" fill="#A5D6A7">→ task_id, space_id, region, detail_type, exec_id</text>
+
+  <!-- 3. RCA Writer -->
+  <rect x="40" y="320" width="220" height="65" rx="8" fill="#1B2838" stroke="#FF9900" stroke-width="1.5"/>
+  <rect x="55" y="332" width="28" height="28" rx="4" fill="#FF9900"/>
+  <text x="69" y="351" text-anchor="middle" font-size="12" fill="#fff">λ</text>
+  <text x="95" y="345" font-size="11" fill="#FFD54F" font-weight="bold">rca_writer</text>
+  <text x="95" y="362" font-size="9" fill="#B0BEC5">On Investigation Completed</text>
+  <text x="55" y="378" font-size="8" fill="#A5D6A7">→ affected_resources, cascade_graph, resource_arns</text>
+
+  <!-- Write arrows -->
+  <line x1="260" y1="152" x2="418" y2="380" stroke="#4CAF50" stroke-width="1.5" marker-end="url(#arrow-green)"/>
+  <line x1="260" y1="252" x2="418" y2="420" stroke="#4CAF50" stroke-width="1.5" marker-end="url(#arrow-green)"/>
+  <line x1="260" y1="352" x2="418" y2="460" stroke="#4CAF50" stroke-width="1.5" marker-end="url(#arrow-green)"/>
+
+  <!-- ==================== READERS (RIGHT SIDE) ==================== -->
+  <text x="1050" y="90" text-anchor="middle" font-size="14" font-weight="bold" fill="#2196F3">READERS</text>
+
+  <!-- 1. Orchestrator -->
+  <rect x="940" y="120" width="220" height="65" rx="8" fill="#1B2838" stroke="#2196F3" stroke-width="1.5"/>
+  <rect x="955" y="132" width="28" height="28" rx="4" fill="#232F3E"/>
+  <text x="969" y="151" text-anchor="middle" font-size="12" fill="#fff">⌘</text>
+  <text x="995" y="145" font-size="11" fill="#90CAF9" font-weight="bold">orchestrator.py</text>
+  <text x="995" y="162" font-size="9" fill="#B0BEC5">Polls for investigation status</text>
+  <text x="955" y="178" font-size="8" fill="#64B5F6">← get_item(incident_id) every 5s</text>
+
+  <!-- 2. Global Forwarder (reader) -->
+  <rect x="940" y="220" width="220" height="65" rx="8" fill="#1B2838" stroke="#2196F3" stroke-width="1.5"/>
+  <rect x="955" y="232" width="28" height="28" rx="4" fill="#FF9900"/>
+  <text x="969" y="251" text-anchor="middle" font-size="12" fill="#fff">λ</text>
+  <text x="995" y="245" font-size="11" fill="#90CAF9" font-weight="bold">global_forwarder</text>
+  <text x="995" y="262" font-size="9" fill="#B0BEC5">Capacity routing</text>
+  <text x="955" y="278" font-size="8" fill="#64B5F6">← scan(IN_PROGRESS) count per space</text>
+
+  <!-- 3. Graph Builder -->
+  <rect x="940" y="320" width="220" height="65" rx="8" fill="#1B2838" stroke="#2196F3" stroke-width="1.5"/>
+  <rect x="955" y="332" width="28" height="28" rx="4" fill="#FF9900"/>
+  <text x="969" y="351" text-anchor="middle" font-size="12" fill="#fff">λ</text>
+  <text x="995" y="345" font-size="11" fill="#90CAF9" font-weight="bold">graph_builder</text>
+  <text x="995" y="362" font-size="9" fill="#B0BEC5">Live status for HTML graph</text>
+  <text x="955" y="378" font-size="8" fill="#64B5F6">← scan(all) + enrich S3 nodes</text>
+
+  <!-- 4. RCA Writer (reader) -->
+  <rect x="940" y="420" width="220" height="65" rx="8" fill="#1B2838" stroke="#2196F3" stroke-width="1.5"/>
+  <rect x="955" y="432" width="28" height="28" rx="4" fill="#FF9900"/>
+  <text x="969" y="451" text-anchor="middle" font-size="12" fill="#fff">λ</text>
+  <text x="995" y="445" font-size="11" fill="#90CAF9" font-weight="bold">rca_writer</text>
+  <text x="995" y="462" font-size="9" fill="#B0BEC5">Resolve incident_id from task_id</text>
+  <text x="955" y="478" font-size="8" fill="#64B5F6">← query(task_id-index)</text>
+
+  <!-- Read arrows -->
+  <line x1="938" y1="152" x2="782" y2="380" stroke="#2196F3" stroke-width="1.5" marker-end="url(#arrow-blue)"/>
+  <line x1="938" y1="252" x2="782" y2="420" stroke="#2196F3" stroke-width="1.5" marker-end="url(#arrow-blue)"/>
+  <line x1="938" y1="352" x2="782" y2="460" stroke="#2196F3" stroke-width="1.5" marker-end="url(#arrow-blue)"/>
+  <line x1="938" y1="452" x2="782" y2="490" stroke="#2196F3" stroke-width="1.5" marker-end="url(#arrow-blue)"/>
+
+  <!-- ==================== STREAMS (BOTTOM) ==================== -->
+  <!-- DynamoDB Streams arrow down -->
+  <line x1="600" y1="562" x2="600" y2="620" stroke="#9C27B0" stroke-width="2" marker-end="url(#arrow-purple)"/>
+  <text x="615" y="595" font-size="10" fill="#CE93D8">DynamoDB Streams</text>
+
+  <!-- Neptune Feeder -->
+  <rect x="490" y="625" width="220" height="65" rx="8" fill="#1B2838" stroke="#9C27B0" stroke-width="1.5"/>
+  <rect x="505" y="637" width="28" height="28" rx="4" fill="#FF9900"/>
+  <text x="519" y="656" text-anchor="middle" font-size="12" fill="#fff">λ</text>
+  <text x="545" y="650" font-size="11" fill="#CE93D8" font-weight="bold">neptune_feeder</text>
+  <text x="545" y="667" font-size="9" fill="#B0BEC5">Real-time graph updates</text>
+  <text x="505" y="683" font-size="8" fill="#CE93D8">→ Investigation, Resource, Cause, ArnResource nodes</text>
+
+  <!-- Neptune -->
+  <rect x="490" y="720" width="220" height="55" rx="8" fill="#1B2838" stroke="#9C27B0" stroke-width="1.5"/>
+  <rect x="505" y="732" width="28" height="28" rx="4" fill="#9C27B0"/>
+  <text x="519" y="751" text-anchor="middle" font-size="12" fill="#fff">◉</text>
+  <text x="545" y="745" font-size="11" fill="#CE93D8" font-weight="bold">Neptune</text>
+  <text x="545" y="762" font-size="9" fill="#B0BEC5">Graph DB (Gremlin queries)</text>
+
+  <line x1="600" y1="690" x2="600" y2="718" stroke="#9C27B0" stroke-width="1.5" marker-end="url(#arrow-purple)"/>
+
+  <!-- ==================== EVENT SOURCE (TOP) ==================== -->
+  <!-- EventBridge -->
+  <rect x="420" y="100" width="360" height="55" rx="8" fill="#1B2838" stroke="#FF9900" stroke-width="1.5"/>
+  <rect x="435" y="112" width="28" height="28" rx="4" fill="#FF9900"/>
+  <text x="449" y="131" text-anchor="middle" font-size="12" fill="#fff">⚡</text>
+  <text x="475" y="125" font-size="11" fill="#FFD54F" font-weight="bold">EventBridge</text>
+  <text x="475" y="142" font-size="9" fill="#B0BEC5">source: aws.aidevops</text>
+  <text x="620" y="125" font-size="9" fill="#E0E0E0">Investigation Created | In Progress | Completed | Failed | Linked</text>
+  <text x="620" y="142" font-size="9" fill="#E0E0E0">Mitigation In Progress | Completed | Failed</text>
+
+  <!-- SQS -->
+  <rect x="500" y="200" width="200" height="45" rx="8" fill="#1B2838" stroke="#FF9900" stroke-width="1"/>
+  <rect x="515" y="210" width="24" height="24" rx="4" fill="#FF9900"/>
+  <text x="527" y="227" text-anchor="middle" font-size="10" fill="#fff">▤</text>
+  <text x="555" y="225" font-size="10" fill="#FFD54F">SQS</text>
+  <text x="555" y="238" font-size="8" fill="#B0BEC5">fis-chaos-agent-events</text>
+
+  <!-- Arrows: EventBridge → SQS → Dispatcher -->
+  <line x1="600" y1="155" x2="600" y2="198" stroke="#FF9900" stroke-width="1.5" marker-end="url(#arrow-orange)"/>
+  <line x1="500" y1="225" x2="260" y2="245" stroke="#FF9900" stroke-width="1.5" marker-end="url(#arrow-orange)"/>
+
+  <!-- EventBridge → RCA Writer (direct) -->
+  <line x1="450" y1="155" x2="150" y2="318" stroke="#FF9900" stroke-width="1" stroke-dasharray="4,2" marker-end="url(#arrow-orange)"/>
+  <text x="280" y="240" font-size="8" fill="#FF9900">direct target</text>
+
+  <!-- ==================== LEGEND ==================== -->
+  <rect x="40" y="800" width="1120" height="80" rx="8" fill="#1B2838" stroke="#455A64" stroke-width="1"/>
+  <text x="60" y="825" font-size="12" font-weight="bold" fill="#888">Legend:</text>
+  <line x1="60" y1="845" x2="90" y2="845" stroke="#4CAF50" stroke-width="2"/>
+  <text x="95" y="849" font-size="10" fill="#A5D6A7">Write (update_item)</text>
+  <line x1="220" y1="845" x2="250" y2="845" stroke="#2196F3" stroke-width="2"/>
+  <text x="255" y="849" font-size="10" fill="#90CAF9">Read (get_item / query / scan)</text>
+  <line x1="440" y1="845" x2="470" y2="845" stroke="#9C27B0" stroke-width="2"/>
+  <text x="475" y="849" font-size="10" fill="#CE93D8">DynamoDB Streams (real-time)</text>
+  <line x1="680" y1="845" x2="710" y2="845" stroke="#FF9900" stroke-width="2"/>
+  <text x="715" y="849" font-size="10" fill="#FFD54F">EventBridge event flow</text>
+
+  <text x="60" y="870" font-size="9" fill="#B0BEC5">Global Table replicates across eu-west-1 (primary) and eu-central-1 (secondary). All writers use regional endpoints. Streams fire in both regions.</text>
+</svg>

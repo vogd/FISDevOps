@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1620 480" width="1620" height="480" font-family="Arial, sans-serif">
+
+  <!-- Title -->
+
+  <!-- ==================== BLOCK 1: REQUEST MITIGATION ==================== -->
+  <rect x="15" y="42" width="420" height="425" rx="10" fill="none" stroke="#64B5F6" stroke-width="2"/>
+  <text x="225" y="64" text-anchor="middle" font-size="18" font-weight="bold" fill="#90CAF9">Request Mitigation (ACP)</text>
+
+  <!-- Lambda icon (Orchestrator) -->
+  <rect x="35" y="78" width="55" height="50" rx="7" fill="#ED7100"/>
+  <text x="62" y="100" text-anchor="middle" font-size="20" fill="#fff">λ</text>
+  <text x="62" y="116" text-anchor="middle" font-size="14" fill="#fff">Orch</text>
+  <text x="62" y="142" text-anchor="middle" font-size="14" fill="#E3F2FD" font-weight="bold">Orchestrator</text>
+  <text x="62" y="158" text-anchor="middle" font-size="14" fill="#BBDEFB">(ACP Client)</text>
+
+  <!-- ACP Server -->
+  <rect x="165" y="78" width="115" height="50" rx="7" fill="#9C27B0"/>
+  <text x="222" y="100" text-anchor="middle" font-size="14" fill="#fff" font-weight="bold">ACP Server</text>
+  <text x="222" y="116" text-anchor="middle" font-size="14" fill="#E1BEE7">stdio</text>
+  <text x="222" y="142" text-anchor="middle" font-size="14" fill="#CE93D8">(subprocess)</text>
+
+  <!-- Agent API -->
+  <rect x="320" y="78" width="100" height="50" rx="7" fill="#FF9800"/>
+  <text x="370" y="98" text-anchor="middle" font-size="14" fill="#fff" font-weight="bold">Agent</text>
+  <text x="370" y="116" text-anchor="middle" font-size="14" fill="#FFF3E0">API</text>
+
+  <!-- Arrows -->
+  <line x1="90" y1="103" x2="163" y2="103" stroke="#CE93D8" stroke-width="1.5" marker-end="url(#a1)"/>
+  <text x="126" y="95" text-anchor="middle" font-size="14" fill="#CE93D8">spawn</text>
+  <line x1="280" y1="103" x2="318" y2="103" stroke="#FFB74D" stroke-width="1.5" marker-end="url(#a2)"/>
+  <text x="298" y="95" text-anchor="middle" font-size="14" fill="#FFB74D">SigV4</text>
+
+  <!-- ACPClient box -->
+  <rect x="35" y="170" width="185" height="100" rx="5" fill="none" stroke="#7E57C2" stroke-width="1"/>
+  <text x="44" y="186" font-size="14" font-weight="bold" fill="#B39DDB">ACPClient:</text>
+  <text x="44" y="204" font-size="14" fill="#E0E0E0" font-family="monospace">region=agent_region</text>
+  <text x="44" y="222" font-size="14" fill="#E0E0E0" font-family="monospace">space_id=space_id</text>
+  <text x="44" y="240" font-size="14" fill="#E0E0E0" font-family="monospace">user_id=STS identity</text>
+  <text x="44" y="258" font-size="14" fill="#B0BEC5" font-family="monospace">timeout=300s</text>
+
+  <!-- Prompt -->
+  <rect x="235" y="170" width="190" height="100" rx="5" fill="none" stroke="#F9A825" stroke-width="1"/>
+  <text x="244" y="186" font-size="14" font-weight="bold" fill="#FFD54F">Prompt:</text>
+  <text x="244" y="206" font-size="14" fill="#E0E0E0">"Generate mitigation</text>
+  <text x="244" y="224" font-size="14" fill="#E0E0E0">for task {task_id}...</text>
+  <text x="244" y="242" font-size="14" fill="#E0E0E0">propose remediation</text>
+  <text x="244" y="260" font-size="14" fill="#B0BEC5">steps"</text>
+
+  <!-- Auth -->
+  <rect x="35" y="285" width="185" height="80" rx="5" fill="none" stroke="#5C6BC0" stroke-width="1"/>
+  <text x="44" y="302" font-size="14" font-weight="bold" fill="#9FA8DA">Auth &amp; Transport:</text>
+  <text x="44" y="320" font-size="14" fill="#E0E0E0">• IAM SigV4</text>
+  <text x="44" y="338" font-size="14" fill="#E0E0E0">• JSON-RPC / stdio</text>
+  <text x="44" y="356" font-size="14" fill="#E0E0E0">• CreateChat → Send</text>
+
+  <!-- Output -->
+  <rect x="235" y="285" width="190" height="50" rx="5" fill="none" stroke="#66BB6A" stroke-width="1"/>
+  <text x="244" y="303" font-size="14" font-weight="bold" fill="#A5D6A7">Output:</text>
+  <text x="244" y="322" font-size="14" fill="#E0E0E0">Agent starts mitigation</text>
+
+  <!-- ==================== BLOCK 2: WAIT ==================== -->
+  <rect x="460" y="42" width="420" height="425" rx="10" fill="none" stroke="#66BB6A" stroke-width="2"/>
+  <text x="670" y="64" text-anchor="middle" font-size="18" font-weight="bold" fill="#A5D6A7">Wait (EventBridge → SQS → DDB)</text>
+
+  <!-- DevOps Agent icon -->
+  <rect x="480" y="78" width="80" height="50" rx="7" fill="#FF9800"/>
+  <text x="520" y="100" text-anchor="middle" font-size="14" fill="#fff" font-weight="bold">Agent</text>
+  <text x="520" y="116" text-anchor="middle" font-size="14" fill="#FFF3E0">mitigate</text>
+
+  <!-- EventBridge icon -->
+  <rect x="600" y="78" width="90" height="50" rx="7" fill="#E91E63"/>
+  <text x="645" y="96" text-anchor="middle" font-size="18" fill="#fff">⚡</text>
+  <text x="645" y="116" text-anchor="middle" font-size="14" fill="#fff">EB</text>
+
+  <!-- SQS icon -->
+  <rect x="730" y="78" width="70" height="50" rx="7" fill="#7B1FA2"/>
+  <text x="765" y="100" text-anchor="middle" font-size="14" fill="#fff" font-weight="bold">SQS</text>
+  <text x="765" y="116" text-anchor="middle" font-size="14" fill="#E1BEE7">Queue</text>
+
+  <!-- DynamoDB icon -->
+  <rect x="820" y="78" width="50" height="50" rx="7" fill="#2196F3"/>
+  <text x="845" y="100" text-anchor="middle" font-size="14" fill="#fff" font-weight="bold">DDB</text>
+  <text x="845" y="116" text-anchor="middle" font-size="14" fill="#BBDEFB">Global</text>
+
+  <!-- Arrows top row -->
+  <line x1="560" y1="103" x2="598" y2="103" stroke="#F48FB1" stroke-width="1.5" marker-end="url(#a3)"/>
+  <line x1="690" y1="103" x2="728" y2="103" stroke="#CE93D8" stroke-width="1.5" marker-end="url(#a4)"/>
+  <line x1="800" y1="103" x2="818" y2="103" stroke="#64B5F6" stroke-width="1.5" marker-end="url(#a7)"/>
+
+  <!-- DynamoDB details -->
+  <rect x="480" y="145" width="195" height="110" rx="5" fill="none" stroke="#64B5F6" stroke-width="1"/>
+  <text x="489" y="162" font-size="14" font-weight="bold" fill="#90CAF9">DynamoDB Global Table:</text>
+  <text x="489" y="180" font-size="14" fill="#E0E0E0">fis-chaos-investigations</text>
+  <text x="489" y="198" font-size="14" fill="#B0BEC5">Key: incident_id</text>
+  <text x="489" y="216" font-size="14" fill="#B0BEC5">GSI: task_id-index</text>
+  <text x="489" y="234" font-size="14" fill="#B0BEC5">Replicated cross-region</text>
+  <text x="489" y="250" font-size="14" fill="#B0BEC5">TTL enabled</text>
+
+  <!-- Dispatcher Lambda -->
+  <rect x="700" y="145" width="155" height="60" rx="5" fill="none" stroke="#FFB74D" stroke-width="1"/>
+  <text x="709" y="162" font-size="14" font-weight="bold" fill="#FFD54F">Dispatcher λ:</text>
+  <text x="709" y="180" font-size="14" fill="#E0E0E0">SQS → parse event</text>
+  <text x="709" y="198" font-size="14" fill="#E0E0E0">→ write to DDB</text>
+
+  <!-- Arrow dispatcher to DDB -->
+  <line x1="700" y1="175" x2="677" y2="175" stroke="#64B5F6" stroke-width="1.5" marker-end="url(#a7r)"/>
+
+  <!-- Events -->
+  <rect x="480" y="270" width="195" height="100" rx="5" fill="none" stroke="#66BB6A" stroke-width="1"/>
+  <text x="489" y="287" font-size="14" font-weight="bold" fill="#A5D6A7">DDB writes:</text>
+  <text x="489" y="305" font-size="14" fill="#E0E0E0">• "Mitigation In Progress"</text>
+  <text x="489" y="323" font-size="14" fill="#E0E0E0">• "Mitigation Completed"</text>
+  <text x="489" y="341" font-size="14" fill="#E0E0E0">• "Mitigation Failed"</text>
+  <text x="489" y="359" font-size="14" fill="#B0BEC5">+ execution_id, region</text>
+
+  <!-- Poll -->
+  <rect x="700" y="225" width="155" height="75" rx="5" fill="none" stroke="#81C784" stroke-width="1"/>
+  <text x="709" y="242" font-size="14" font-weight="bold" fill="#A5D6A7">Orch polls DDB:</text>
+  <text x="709" y="260" font-size="14" fill="#E0E0E0">by incident_id</text>
+  <text x="709" y="278" font-size="14" fill="#E0E0E0">timeout 300s</text>
+  <text x="709" y="296" font-size="14" fill="#B0BEC5">5s intervals</text>
+
+  <!-- ==================== BLOCK 3: FETCH DETAILS ==================== -->
+  <rect x="905" y="42" width="500" height="425" rx="10" fill="none" stroke="#FFB74D" stroke-width="2"/>
+  <text x="1120" y="64" text-anchor="middle" font-size="18" font-weight="bold" fill="#FFD54F">Fetch Details (API)</text>
+
+  <!-- Agent API icon -->
+  <rect x="925" y="78" width="110" height="50" rx="7" fill="#ED7100"/>
+  <text x="980" y="96" text-anchor="middle" font-size="18" fill="#fff">⚙</text>
+  <text x="980" y="116" text-anchor="middle" font-size="14" fill="#fff">Agent API</text>
+
+  <!-- S3 icon -->
+  <rect x="1310" y="78" width="75" height="50" rx="7" fill="#3F8624"/>
+  <text x="1347" y="100" text-anchor="middle" font-size="14" fill="#fff" font-weight="bold">S3</text>
+  <text x="1347" y="116" text-anchor="middle" font-size="14" fill="#C8E6C9">results</text>
+
+  <!-- API Call -->
+  <rect x="925" y="150" width="290" height="80" rx="5" fill="none" stroke="#FFB74D" stroke-width="1"/>
+  <text x="934" y="168" font-size="14" font-weight="bold" fill="#FFD54F">list_journal_records(</text>
+  <text x="934" y="188" font-size="14" fill="#E0E0E0">  agentSpaceId,</text>
+  <text x="934" y="206" font-size="14" fill="#E0E0E0">  executionId,</text>
+  <text x="934" y="224" font-size="14" fill="#FFD54F">  "mitigation_summary_md")</text>
+
+  <!-- Arrow API → call -->
+  <line x1="980" y1="130" x2="980" y2="148" stroke="#FFB74D" stroke-width="1.5" marker-end="url(#a2b)"/>
+
+  <!-- Response -->
+  <rect x="925" y="250" width="290" height="95" rx="5" fill="none" stroke="#66BB6A" stroke-width="1"/>
+  <text x="934" y="268" font-size="14" font-weight="bold" fill="#A5D6A7">Response:</text>
+  <text x="934" y="290" font-size="14" fill="#FFFFFF" font-weight="bold">## Action</text>
+  <text x="934" y="308" font-size="14" fill="#B0BEC5">  remediation step</text>
+  <text x="934" y="326" font-size="14" fill="#FFFFFF" font-weight="bold">## Reasoning</text>
+  <text x="934" y="344" font-size="14" fill="#B0BEC5">  why it fixes root cause</text>
+
+  <!-- Arrow call → response -->
+  <line x1="1050" y1="230" x2="1050" y2="248" stroke="#66BB6A" stroke-width="1.5" marker-end="url(#a5)"/>
+
+  <!-- S3 persist -->
+  <rect x="1240" y="150" width="150" height="80" rx="5" fill="none" stroke="#81C784" stroke-width="1"/>
+  <text x="1249" y="168" font-size="14" font-weight="bold" fill="#A5D6A7">Persist to S3:</text>
+  <text x="1249" y="188" font-size="14" fill="#E0E0E0">mitigation_status</text>
+  <text x="1249" y="206" font-size="14" fill="#E0E0E0">mitigation_action</text>
+  <text x="1249" y="224" font-size="14" fill="#E0E0E0">mitigation_reasoning</text>
+
+  <!-- Arrow to S3 -->
+  <line x1="1215" y1="190" x2="1238" y2="190" stroke="#81C784" stroke-width="1.5" marker-end="url(#a5)"/>
+  <line x1="1347" y1="130" x2="1347" y2="148" stroke="#81C784" stroke-width="1.5" stroke-dasharray="4,2" marker-end="url(#a5)"/>
+
+  <!-- ==================== FLOW ARROWS BETWEEN BLOCKS ==================== -->
+  <path d="M 435 180 C 448 180, 448 103, 460 103" stroke="#90CAF9" stroke-width="2.5" fill="none" marker-end="url(#a6)"/>
+  <path d="M 880 200 C 893 200, 893 130, 905 130" stroke="#90CAF9" stroke-width="2.5" fill="none" marker-end="url(#a6)"/>
+
+  <!-- Arrow markers -->
+  <defs>
+    <marker id="a1" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#CE93D8"/></marker>
+    <marker id="a2" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#FFB74D"/></marker>
+    <marker id="a2b" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#FFB74D"/></marker>
+    <marker id="a3" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#F48FB1"/></marker>
+    <marker id="a4" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#CE93D8"/></marker>
+    <marker id="a5" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#81C784"/></marker>
+    <marker id="a6" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#90CAF9"/></marker>
+    <marker id="a7" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#64B5F6"/></marker>
+    <marker id="a7r" markerWidth="8" markerHeight="6" refX="1" refY="3" orient="auto"><polygon points="8 0, 0 3, 8 6" fill="#64B5F6"/></marker>
+  </defs>
+</svg>
