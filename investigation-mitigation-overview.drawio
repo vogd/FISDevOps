@@ -1,0 +1,194 @@
+<mxfile host="app.diagrams.net" modified="2026-05-21T22:44:00.000Z">
+  <diagram name="Investigation + Mitigation Overview" id="inv-miti-overview">
+    <mxGraphModel dx="1650" dy="600" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1650" pageHeight="600" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <!-- ==================== BLOCK 1: WEBHOOK TRIGGER ==================== -->
+        <mxCell id="b1" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#64B5F6;strokeWidth=2;arcSize=4;" vertex="1" parent="1">
+          <mxGeometry x="15" y="10" width="250" height="555" as="geometry" />
+        </mxCell>
+        <mxCell id="b1-title" value="Webhook Trigger" style="text;html=1;fontSize=14;fontStyle=1;align=center;fontColor=#90CAF9;" vertex="1" parent="1">
+          <mxGeometry x="55" y="15" width="170" height="22" as="geometry" />
+        </mxCell>
+
+        <mxCell id="eb-global" value="⚡ EventBridge&#xa;Global Endpoint" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E91E63;strokeColor=#C2185B;fontColor=#ffffff;fontStyle=1;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="35" y="48" width="210" height="45" as="geometry" />
+        </mxCell>
+        <mxCell id="lambda-fwd" value="λ Forwarder (HMAC + route)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ED7100;strokeColor=#C45400;fontColor=#ffffff;fontStyle=1;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="35" y="108" width="210" height="38" as="geometry" />
+        </mxCell>
+        <mxCell id="webhook" value="Agent Webhook (HMAC-SHA256)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FF9800;strokeColor=#E65100;fontColor=#ffffff;fontStyle=1;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="35" y="161" width="210" height="38" as="geometry" />
+        </mxCell>
+        <mxCell id="r53" value="Route53 HC → failover routing" style="rounded=1;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#64B5F6;fontSize=10;fontColor=#BBDEFB;" vertex="1" parent="1">
+          <mxGeometry x="35" y="214" width="210" height="32" as="geometry" />
+        </mxCell>
+        <mxCell id="ddb-route" value="DDB: records routed_to region" style="rounded=1;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#64B5F6;fontSize=10;fontColor=#BBDEFB;" vertex="1" parent="1">
+          <mxGeometry x="35" y="261" width="210" height="32" as="geometry" />
+        </mxCell>
+
+        <mxCell id="e-eb-fwd" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#CE93D8;strokeWidth=1.5;" edge="1" source="eb-global" target="lambda-fwd" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-fwd-wh" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#FFB74D;strokeWidth=1.5;" edge="1" source="lambda-fwd" target="webhook" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-wh-r53" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#64B5F6;strokeWidth=1.5;" edge="1" source="webhook" target="r53" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- ==================== BLOCK 2: INVESTIGATION ==================== -->
+        <mxCell id="b2" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#66BB6A;strokeWidth=2;arcSize=4;" vertex="1" parent="1">
+          <mxGeometry x="290" y="10" width="440" height="555" as="geometry" />
+        </mxCell>
+        <mxCell id="b2-title" value="Investigation" style="text;html=1;fontSize=14;fontStyle=1;align=center;fontColor=#A5D6A7;" vertex="1" parent="1">
+          <mxGeometry x="430" y="15" width="160" height="22" as="geometry" />
+        </mxCell>
+
+        <mxCell id="agent-inv" value="DevOps Agent&#xa;(investigates cluster)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FF9800;strokeColor=#E65100;fontColor=#ffffff;fontStyle=1;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="310" y="48" width="150" height="42" as="geometry" />
+        </mxCell>
+        <mxCell id="reads" value="Reads: K8s events, pod logs, CW metrics, CloudTrail" style="rounded=1;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#81C784;fontSize=9;fontColor=#E0E0E0;" vertex="1" parent="1">
+          <mxGeometry x="480" y="48" width="230" height="42" as="geometry" />
+        </mxCell>
+
+        <!-- Investigation statuses -->
+        <mxCell id="inv-box" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#66BB6A;arcSize=4;" vertex="1" parent="1">
+          <mxGeometry x="310" y="105" width="400" height="170" as="geometry" />
+        </mxCell>
+        <mxCell id="inv-label" value="Investigation Statuses:" style="text;html=1;fontSize=11;fontStyle=1;fontColor=#A5D6A7;" vertex="1" parent="1">
+          <mxGeometry x="320" y="108" width="200" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="s-completed" value="✓ Investigation Completed" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#2E7D32;strokeColor=none;fontColor=#ffffff;fontSize=10;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="320" y="132" width="180" height="24" as="geometry" />
+        </mxCell>
+        <mxCell id="s-linked" value="Investigation Linked" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#1565C0;strokeColor=none;fontColor=#ffffff;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="320" y="162" width="180" height="24" as="geometry" />
+        </mxCell>
+        <mxCell id="s-inprog" value="Investigation In Progress" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F57F17;strokeColor=none;fontColor=#ffffff;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="320" y="192" width="180" height="24" as="geometry" />
+        </mxCell>
+        <mxCell id="s-failed" value="Investigation Failed" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#C62828;strokeColor=none;fontColor=#ffffff;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="520" y="132" width="180" height="24" as="geometry" />
+        </mxCell>
+        <mxCell id="s-timeout" value="Investigation Timed Out" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E65100;strokeColor=none;fontColor=#ffffff;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="520" y="162" width="180" height="24" as="geometry" />
+        </mxCell>
+        <mxCell id="s-cancelled" value="Investigation Cancelled" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#4E342E;strokeColor=none;fontColor=#ffffff;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="520" y="192" width="180" height="24" as="geometry" />
+        </mxCell>
+        <mxCell id="s-poll" value="POLL_TIMEOUT" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#455A64;strokeColor=none;fontColor=#ffffff;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="320" y="222" width="180" height="24" as="geometry" />
+        </mxCell>
+        <mxCell id="s-vialinked" value="COMPLETED (via LINKED)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#1B5E20;strokeColor=none;fontColor=#ffffff;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="520" y="222" width="180" height="24" as="geometry" />
+        </mxCell>
+
+        <!-- RCA -->
+        <mxCell id="rca" value="RCA Generation (if issue ongoing):&#xa;ListBacklogTasks → task_id&#xa;ListJournalRecords → &quot;investigation_summary_md&quot;&#xa;Returns: ## Symptoms, ## Findings, ## Root Cause, ## Gaps" style="rounded=1;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#FFD54F;fontSize=9;align=left;spacingLeft=8;fontColor=#E0E0E0;" vertex="1" parent="1">
+          <mxGeometry x="310" y="290" width="400" height="75" as="geometry" />
+        </mxCell>
+
+        <!-- Scoring -->
+        <mxCell id="scoring" value="Scoring (Bedrock):&#xa;① Keyword match (instant) → agent_match&#xa;② Opus assessment → opus_score: yes | partially | no" style="rounded=1;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#CE93D8;fontSize=9;align=left;spacingLeft=8;fontColor=#E0E0E0;" vertex="1" parent="1">
+          <mxGeometry x="310" y="380" width="400" height="55" as="geometry" />
+        </mxCell>
+
+        <!-- ==================== BLOCK 3: ACP MITIGATION ==================== -->
+        <mxCell id="b3" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#FFB74D;strokeWidth=2;arcSize=4;" vertex="1" parent="1">
+          <mxGeometry x="755" y="10" width="430" height="555" as="geometry" />
+        </mxCell>
+        <mxCell id="b3-title" value="ACP Mitigation (high-level)" style="text;html=1;fontSize=14;fontStyle=1;align=center;fontColor=#FFD54F;" vertex="1" parent="1">
+          <mxGeometry x="850" y="15" width="240" height="22" as="geometry" />
+        </mxCell>
+
+        <!-- ACP request -->
+        <mxCell id="acp-req" value="Request via ACP:&#xa;Orchestrator (client) → ACP Server → Agent API&#xa;prompt_sync(&quot;Generate mitigation for task {task_id}...&quot;)&#xa;Auth: IAM SigV4 | JSON-RPC/stdio | Timeout: 300s" style="rounded=1;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#9C27B0;fontSize=9;align=left;spacingLeft=8;fontColor=#E0E0E0;" vertex="1" parent="1">
+          <mxGeometry x="775" y="48" width="390" height="68" as="geometry" />
+        </mxCell>
+
+        <!-- Wait -->
+        <mxCell id="wait" value="Wait: EB → SQS → Dispatcher λ → DynamoDB (Global Table)&#xa;Orchestrator polls DDB by incident_id (5s, 300s timeout)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#66BB6A;fontSize=9;align=left;spacingLeft=8;fontColor=#E0E0E0;" vertex="1" parent="1">
+          <mxGeometry x="775" y="128" width="390" height="45" as="geometry" />
+        </mxCell>
+
+        <!-- Mitigation statuses -->
+        <mxCell id="miti-box" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#FFB74D;arcSize=4;" vertex="1" parent="1">
+          <mxGeometry x="775" y="188" width="390" height="175" as="geometry" />
+        </mxCell>
+        <mxCell id="miti-label" value="Mitigation Statuses:" style="text;html=1;fontSize=11;fontStyle=1;fontColor=#FFD54F;" vertex="1" parent="1">
+          <mxGeometry x="785" y="191" width="200" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="m-inprog" value="Mitigation In Progress" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F57F17;strokeColor=none;fontColor=#ffffff;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="785" y="215" width="175" height="24" as="geometry" />
+        </mxCell>
+        <mxCell id="m-completed" value="✓ Mitigation Completed" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#2E7D32;strokeColor=none;fontColor=#ffffff;fontSize=10;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="785" y="245" width="175" height="24" as="geometry" />
+        </mxCell>
+        <mxCell id="m-stopped" value="STOPPED (ready)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#1B5E20;strokeColor=none;fontColor=#ffffff;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="785" y="275" width="175" height="24" as="geometry" />
+        </mxCell>
+        <mxCell id="m-failed" value="Mitigation Failed" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#C62828;strokeColor=none;fontColor=#ffffff;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="980" y="215" width="175" height="24" as="geometry" />
+        </mxCell>
+        <mxCell id="m-timeout" value="Mitigation Timed Out" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E65100;strokeColor=none;fontColor=#ffffff;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="980" y="245" width="175" height="24" as="geometry" />
+        </mxCell>
+        <mxCell id="m-cancelled" value="Mitigation Cancelled" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#4E342E;strokeColor=none;fontColor=#ffffff;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="980" y="275" width="175" height="24" as="geometry" />
+        </mxCell>
+        <mxCell id="m-self" value="— self-healed (none)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#455A64;strokeColor=none;fontColor=#ffffff;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="785" y="305" width="175" height="24" as="geometry" />
+        </mxCell>
+        <mxCell id="m-pending" value="⏳ IN_PROGRESS (pending)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#37474F;strokeColor=none;fontColor=#ffffff;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="980" y="305" width="175" height="24" as="geometry" />
+        </mxCell>
+
+        <!-- Fetch -->
+        <mxCell id="fetch" value="Fetch: list_journal_records(executionId, &quot;mitigation_summary_md&quot;)&#xa;Returns: ## Action, ## Reasoning, ## Steps" style="rounded=1;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#81C784;fontSize=9;align=left;spacingLeft=8;fontColor=#E0E0E0;" vertex="1" parent="1">
+          <mxGeometry x="775" y="378" width="390" height="45" as="geometry" />
+        </mxCell>
+
+        <!-- Persist -->
+        <mxCell id="persist" value="Persist to S3: mitigation_status + action + reasoning → result JSON" style="rounded=1;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#3F8624;fontSize=9;align=left;spacingLeft=8;fontColor=#E0E0E0;" vertex="1" parent="1">
+          <mxGeometry x="775" y="435" width="390" height="32" as="geometry" />
+        </mxCell>
+
+        <!-- ==================== BLOCK 4: OUTPUT ==================== -->
+        <mxCell id="b4" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#81C784;strokeWidth=2;arcSize=4;" vertex="1" parent="1">
+          <mxGeometry x="1210" y="10" width="185" height="555" as="geometry" />
+        </mxCell>
+        <mxCell id="b4-title" value="Output" style="text;html=1;fontSize=14;fontStyle=1;align=center;fontColor=#A5D6A7;" vertex="1" parent="1">
+          <mxGeometry x="1250" y="15" width="100" height="22" as="geometry" />
+        </mxCell>
+
+        <mxCell id="s3-out" value="S3&#xa;fis-chaos-results" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#3F8624;strokeColor=#2D6B19;fontColor=#ffffff;fontStyle=1;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="1230" y="48" width="145" height="42" as="geometry" />
+        </mxCell>
+        <mxCell id="ddb-out" value="DynamoDB&#xa;Global Table" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#2196F3;strokeColor=#1565C0;fontColor=#ffffff;fontStyle=1;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="1230" y="105" width="145" height="42" as="geometry" />
+        </mxCell>
+        <mxCell id="skills-out" value="Skills&#xa;read S3 history" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#9C27B0;strokeColor=#7B1FA2;fontColor=#ffffff;fontStyle=1;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="1230" y="162" width="145" height="42" as="geometry" />
+        </mxCell>
+        <mxCell id="stored" value="Stored per incident:&#xa;• RCA markdown&#xa;• opus_score&#xa;• mitigation plan&#xa;• timestamps&#xa;• cascade graph&#xa;• errors[]&#xa;• scorecard rollup" style="rounded=1;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#81C784;fontSize=9;align=left;spacingLeft=8;fontColor=#E0E0E0;" vertex="1" parent="1">
+          <mxGeometry x="1230" y="220" width="145" height="130" as="geometry" />
+        </mxCell>
+
+        <!-- ==================== FLOW ARROWS BETWEEN BLOCKS ==================== -->
+        <mxCell id="f1" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#90CAF9;strokeWidth=2.5;" edge="1" source="webhook" target="agent-inv" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="f2" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#90CAF9;strokeWidth=2.5;" edge="1" source="scoring" target="acp-req" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="f3" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#90CAF9;strokeWidth=2.5;" edge="1" source="persist" target="s3-out" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

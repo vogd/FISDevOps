@@ -1,0 +1,193 @@
+<mxfile host="app.diagrams.net" modified="2026-05-21T19:55:00.000Z">
+  <diagram name="Scoring Pipeline" id="scoring-pipeline">
+    <mxGraphModel dx="1800" dy="1000" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1800" pageHeight="1000" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <!-- Title -->
+        <mxCell id="title" value="Scoring Pipeline — Three-Stage RCA Evaluation" style="text;html=1;fontSize=20;fontStyle=1;align=center;fontFamily=Arial;" vertex="1" parent="1">
+          <mxGeometry x="500" y="15" width="500" height="30" as="geometry" />
+        </mxCell>
+
+        <!-- ==================== STAGE 1 BOX ==================== -->
+        <mxCell id="s1-box" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#EDE7F6;strokeColor=#7E57C2;strokeWidth=2.5;arcSize=4;" vertex="1" parent="1">
+          <mxGeometry x="30" y="70" width="380" height="370" as="geometry" />
+        </mxCell>
+        <mxCell id="s1-title" value="① Keyword Match (instant)" style="text;html=1;fontSize=15;fontStyle=1;align=center;fontColor=#4A148C;" vertex="1" parent="1">
+          <mxGeometry x="70" y="80" width="300" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="s1-subtitle" value="In-process (orchestrator.py)&#xa;No network call — runs inline after RCA fetch" style="text;html=1;fontSize=10;align=center;fontColor=#666666;fontStyle=2;" vertex="1" parent="1">
+          <mxGeometry x="80" y="105" width="280" height="35" as="geometry" />
+        </mxCell>
+
+        <!-- Orchestrator -->
+        <mxCell id="orch" value="Orchestrator&#xa;(Python)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ED7100;strokeColor=#C45400;fontColor=#ffffff;fontStyle=1;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="55" y="155" width="130" height="50" as="geometry" />
+        </mxCell>
+
+        <!-- Ground truth input -->
+        <mxCell id="gt" value="ground_truth&#xa;(from experiments.json)&#xa;e.g. &quot;cpu_pressure&quot;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFF9C4;strokeColor=#F9A825;fontSize=10;align=center;" vertex="1" parent="1">
+          <mxGeometry x="215" y="155" width="175" height="55" as="geometry" />
+        </mxCell>
+
+        <!-- Agent RCA input -->
+        <mxCell id="rca-input" value="agent_rca&#xa;(investigation_summary_md&#xa;from DevOps Agent)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFF9C4;strokeColor=#F9A825;fontSize=10;align=center;" vertex="1" parent="1">
+          <mxGeometry x="55" y="225" width="175" height="55" as="geometry" />
+        </mxCell>
+
+        <!-- Logic box -->
+        <mxCell id="logic" value="score_rca() logic:&#xa;━━━━━━━━━━━━━━━━━━━&#xa;gt_keywords = ground_truth.replace('_',' ').split()&#xa;→ e.g. ['cpu', 'pressure']&#xa;&#xa;matched = any(kw in rca.lower() for kw in gt_keywords)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F3E5F5;strokeColor=#7E57C2;fontSize=9;align=left;spacingLeft=8;spacingTop=4;" vertex="1" parent="1">
+          <mxGeometry x="55" y="300" width="300" height="95" as="geometry" />
+        </mxCell>
+
+        <!-- Output 1 -->
+        <mxCell id="out1" value="Output:&#xa;agent_match = True/False&#xa;agent_rca_snippet (120 chars)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E8F5E9;strokeColor=#43A047;fontSize=10;align=center;fontStyle=0;" vertex="1" parent="1">
+          <mxGeometry x="215" y="225" width="175" height="55" as="geometry" />
+        </mxCell>
+
+        <!-- Stage 1 edges -->
+        <mxCell id="e1a" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#7E57C2;strokeWidth=1.5;" edge="1" source="orch" target="logic" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e1b" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#F9A825;strokeWidth=1.5;" edge="1" source="gt" target="logic" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e1c" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#F9A825;strokeWidth=1.5;" edge="1" source="rca-input" target="logic" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e1d" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#43A047;strokeWidth=1.5;" edge="1" source="logic" target="out1" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- ==================== STAGE 2 BOX ==================== -->
+        <mxCell id="s2-box" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E3F2FD;strokeColor=#1565C0;strokeWidth=2.5;arcSize=4;" vertex="1" parent="1">
+          <mxGeometry x="450" y="70" width="530" height="540" as="geometry" />
+        </mxCell>
+        <mxCell id="s2-title" value="② Opus Assessment (Bedrock)" style="text;html=1;fontSize=15;fontStyle=1;align=center;fontColor=#0D47A1;" vertex="1" parent="1">
+          <mxGeometry x="530" y="80" width="370" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="s2-subtitle" value="Called from orchestrator (inline) AND Lambda scorer (batch)&#xa;Region: us-west-2 endpoint — model is Cross-Region Inference Profile" style="text;html=1;fontSize=10;align=center;fontColor=#666666;fontStyle=2;" vertex="1" parent="1">
+          <mxGeometry x="480" y="105" width="470" height="35" as="geometry" />
+        </mxCell>
+
+        <!-- Prompt Inputs -->
+        <mxCell id="prompt-in" value="Prompt Inputs:&#xa;━━━━━━━━━━━━━━━━━━━━━━&#xa;• experiment_name (from experiments.json)&#xa;• ground_truth (e.g. &quot;cpu_pressure&quot;)&#xa;• description (FIS template description,&#xa;   e.g. &quot;Spike CPU to 100% on app pods&quot;)&#xa;• agent_rca (first 3000 chars of&#xa;   investigation_summary_md)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFF9C4;strokeColor=#F9A825;fontSize=10;align=left;spacingLeft=10;spacingTop=4;" vertex="1" parent="1">
+          <mxGeometry x="470" y="150" width="280" height="140" as="geometry" />
+        </mxCell>
+
+        <!-- Bedrock service -->
+        <mxCell id="bedrock-svc" value="Amazon Bedrock&#xa;bedrock-runtime&#xa;(InvokeModel API)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#01A88D;strokeColor=#007B6B;fontColor=#ffffff;fontStyle=1;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="780" y="155" width="175" height="60" as="geometry" />
+        </mxCell>
+
+        <!-- Model config -->
+        <mxCell id="model-cfg" value="Model Configuration:&#xa;━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━&#xa;Model ID: us.anthropic.claude-sonnet-4-6&#xa;Type: Cross-Region Inference Profile&#xa;  → AWS routes to available US capacity&#xa;  → us-east-1, us-west-2, etc.&#xa;&#xa;Region (SDK client): us-west-2&#xa;anthropic_version: bedrock-2023-05-31&#xa;max_tokens: 256" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E0F2F1;strokeColor=#00897B;fontSize=10;align=left;spacingLeft=10;spacingTop=4;" vertex="1" parent="1">
+          <mxGeometry x="770" y="235" width="195" height="165" as="geometry" />
+        </mxCell>
+
+        <!-- Prompt design -->
+        <mxCell id="prompt-design" value="Prompt Design (OPUS_PROMPT):&#xa;━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━&#xa;• Persona: Expert SRE evaluator&#xa;• 10 failure category definitions:&#xa;   pod_failure, container_failure,&#xa;   network_latency, network_packet_loss,&#xa;   network_partition, cpu_pressure,&#xa;   memory_pressure, io_latency,&#xa;   http_fault, dns_failure&#xa;• Symptom vs Root Cause distinction enforced&#xa;• Examples of CORRECT vs WRONG diagnosis&#xa;• &quot;Ignore injection tool (Chaos Mesh/FIS)&quot;&#xa;• &quot;CloudTrail/FIS trace = valid finding&quot;&#xa;• JSON output: {score, reasoning}" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E8EAF6;strokeColor=#3F51B5;fontSize=9;align=left;spacingLeft=10;spacingTop=4;" vertex="1" parent="1">
+          <mxGeometry x="470" y="310" width="270" height="230" as="geometry" />
+        </mxCell>
+
+        <!-- Opus output -->
+        <mxCell id="out2" value="Output (JSON):&#xa;{&#xa;  &quot;score&quot;: &quot;yes | partially | no&quot;,&#xa;  &quot;reasoning&quot;: &quot;one sentence&quot;&#xa;}" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E8F5E9;strokeColor=#43A047;fontSize=10;align=left;spacingLeft=10;spacingTop=4;fontStyle=0;" vertex="1" parent="1">
+          <mxGeometry x="780" y="430" width="185" height="90" as="geometry" />
+        </mxCell>
+
+        <!-- Stage 2 edges -->
+        <mxCell id="e2a" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#1565C0;strokeWidth=1.5;" edge="1" source="prompt-in" target="bedrock-svc" parent="1" value="invoke">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e2b" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#00897B;strokeWidth=1.5;" edge="1" source="bedrock-svc" target="model-cfg" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e2c" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#43A047;strokeWidth=1.5;" edge="1" source="model-cfg" target="out2" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e2d" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#3F51B5;strokeWidth=1.5;dashed=1;" edge="1" source="prompt-design" target="prompt-in" parent="1" value="structures">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- ==================== STAGE 3 BOX ==================== -->
+        <mxCell id="s3-box" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFF3E0;strokeColor=#E65100;strokeWidth=2.5;arcSize=4;" vertex="1" parent="1">
+          <mxGeometry x="1020" y="70" width="750" height="540" as="geometry" />
+        </mxCell>
+        <mxCell id="s3-title" value="③ Lambda Batch Scorer (S3)" style="text;html=1;fontSize=15;fontStyle=1;align=center;fontColor=#BF360C;" vertex="1" parent="1">
+          <mxGeometry x="1230" y="80" width="330" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="s3-subtitle" value="Lambda: fis-chaos-scorer | Python 3.12 | 120s timeout&#xa;Deployed: us-west-2 ONLY — NOT cross-regional" style="text;html=1;fontSize=10;align=center;fontColor=#666666;fontStyle=2;" vertex="1" parent="1">
+          <mxGeometry x="1130" y="105" width="430" height="35" as="geometry" />
+        </mxCell>
+
+        <!-- Lambda -->
+        <mxCell id="lambda" value="λ Lambda&#xa;fis-chaos-scorer" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ED7100;strokeColor=#C45400;fontColor=#ffffff;fontStyle=1;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="1050" y="160" width="150" height="55" as="geometry" />
+        </mxCell>
+
+        <!-- S3 -->
+        <mxCell id="s3" value="S3 Bucket&#xa;fis-chaos-results-{acct}" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#3F8624;strokeColor=#2D6B19;fontColor=#ffffff;fontStyle=1;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="1370" y="160" width="175" height="55" as="geometry" />
+        </mxCell>
+
+        <!-- READS box -->
+        <mxCell id="reads" value="READS from S3:&#xa;━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━&#xa;Path: experiments/{id}/{incident}.json&#xa;&#xa;Fields read:&#xa;• name, experiment (type)&#xa;• ground_truth (e.g. &quot;cpu_pressure&quot;)&#xa;• description (FIS template desc)&#xa;• devops_agent_rca (full markdown)&#xa;• agent_rca_snippet (first 120 chars)&#xa;• chaos_kind (PodChaos, NetworkChaos...)&#xa;• fis_status, ts_experiment_started&#xa;• ts_rca_completed, errors[]" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFECB3;strokeColor=#FF8F00;fontSize=9;align=left;spacingLeft=10;spacingTop=4;" vertex="1" parent="1">
+          <mxGeometry x="1050" y="240" width="260" height="210" as="geometry" />
+        </mxCell>
+
+        <!-- WRITES box -->
+        <mxCell id="writes" value="WRITES to S3:&#xa;━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━&#xa;Path: scorecards/latest.json&#xa;&#xa;Structure:&#xa;{&#xa;  total: N,&#xa;  correct: N,  (opus_score=&quot;yes&quot;)&#xa;  partial: N,  (opus_score=&quot;partially&quot;)&#xa;  wrong: N,    (opus_score=&quot;no&quot;)&#xa;  results: [{&#xa;    experiment, name, opus_score,&#xa;    opus_reasoning, ground_truth,&#xa;    devops_agent_rca_full, ...&#xa;  }]&#xa;}" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E8F5E9;strokeColor=#2E7D32;fontSize=9;align=left;spacingLeft=10;spacingTop=4;" vertex="1" parent="1">
+          <mxGeometry x="1370" y="240" width="260" height="250" as="geometry" />
+        </mxCell>
+
+        <!-- Bedrock (from Lambda) -->
+        <mxCell id="bedrock2" value="Bedrock&#xa;(same model:&#xa;us.anthropic.claude-sonnet-4-6)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#01A88D;strokeColor=#007B6B;fontColor=#ffffff;fontSize=10;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="1050" y="480" width="200" height="55" as="geometry" />
+        </mxCell>
+
+        <!-- IAM -->
+        <mxCell id="iam" value="IAM Role: fis-chaos-scorer&#xa;━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━&#xa;• s3:GetObject, s3:PutObject, s3:ListBucket&#xa;  → arn:...s3:::fis-chaos-results-*&#xa;• bedrock:InvokeModel&#xa;  → arn:...foundation-model/us.anthropic.claude-sonnet-4-6&#xa;• logs:CreateLogGroup/Stream/PutLogEvents" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FCE4EC;strokeColor=#C62828;fontSize=9;align=left;spacingLeft=10;spacingTop=4;" vertex="1" parent="1">
+          <mxGeometry x="1300" y="510" width="330" height="95" as="geometry" />
+        </mxCell>
+
+        <!-- Stage 3 edges -->
+        <mxCell id="e3a" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#E65100;strokeWidth=1.5;fontSize=9;fontStyle=1;" edge="1" source="lambda" target="reads" parent="1" value="ListObjects&#xa;+ GetObject">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e3b" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#2E7D32;strokeWidth=1.5;fontSize=9;fontStyle=1;" edge="1" source="lambda" target="writes" parent="1" value="PutObject">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e3c" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#01A88D;strokeWidth=1.5;fontSize=9;" edge="1" source="lambda" target="bedrock2" parent="1" value="InvokeModel&#xa;(per experiment in loop)">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e3d" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#3F8624;strokeWidth=1.5;fontSize=9;dashed=1;" edge="1" source="s3" target="reads" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e3e" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#3F8624;strokeWidth=1.5;fontSize=9;dashed=1;" edge="1" source="s3" target="writes" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- ==================== HA BOX ==================== -->
+        <mxCell id="ha-box" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FAFAFA;strokeColor=#9E9E9E;strokeWidth=2;dashed=1;dashPattern=8 4;" vertex="1" parent="1">
+          <mxGeometry x="30" y="640" width="1740" height="200" as="geometry" />
+        </mxCell>
+        <mxCell id="ha-title" value="HA / Cross-Regional Status" style="text;html=1;fontSize=14;fontStyle=1;align=left;fontColor=#37474F;" vertex="1" parent="1">
+          <mxGeometry x="50" y="650" width="250" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="ha-details" value="• Model ID &quot;us.anthropic.claude-sonnet-4-6&quot; = Cross-Region Inference Profile&#xa;  → AWS automatically routes InvokeModel to available capacity across US regions (us-east-1, us-west-2, etc.)&#xa;&#xa;• Bedrock SDK client: us-west-2 (single endpoint) — but actual inference is cross-regional under the hood&#xa;&#xa;• Lambda scorer: deployed in us-west-2 ONLY — not replicated to secondary region&#xa;&#xa;• S3 bucket: single region (us-west-2) — Agent Skills in BOTH agent regions (us-east-1 &amp; us-west-2) read cross-region&#xa;&#xa;• Scoring is NOT fully HA: if us-west-2 Lambda/Bedrock unavailable → scoring halts&#xa;  BUT: Investigation IS HA (EventBridge Global Endpoint + multi-region agents) — scoring is a non-critical post-process" style="text;html=1;fontSize=10;align=left;fontColor=#455A64;spacingLeft=10;verticalAlign=top;" vertex="1" parent="1">
+          <mxGeometry x="50" y="680" width="1700" height="150" as="geometry" />
+        </mxCell>
+
+        <!-- ==================== FLOW ARROWS BETWEEN STAGES ==================== -->
+        <mxCell id="flow1" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#333333;strokeWidth=2.5;fontSize=10;fontStyle=1;" edge="1" source="out1" target="prompt-in" parent="1" value="if RCA exists →">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="flow2" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#333333;strokeWidth=2.5;fontSize=10;fontStyle=1;" edge="1" source="out2" target="lambda" parent="1" value="batch mode →">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

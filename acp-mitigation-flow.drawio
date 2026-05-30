@@ -1,0 +1,181 @@
+<mxfile host="app.diagrams.net" modified="2026-05-21T21:44:00.000Z">
+  <diagram name="ACP Mitigation Flow" id="acp-miti">
+    <mxGraphModel dx="1620" dy="500" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1620" pageHeight="500" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <!-- ==================== BLOCK 1: REQUEST MITIGATION ==================== -->
+        <mxCell id="b1" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#64B5F6;strokeWidth=2;arcSize=4;" vertex="1" parent="1">
+          <mxGeometry x="15" y="10" width="420" height="425" as="geometry" />
+        </mxCell>
+        <mxCell id="b1-title" value="Request Mitigation (ACP)" style="text;html=1;fontSize=14;fontStyle=1;align=center;fontColor=#90CAF9;" vertex="1" parent="1">
+          <mxGeometry x="75" y="15" width="300" height="22" as="geometry" />
+        </mxCell>
+
+        <!-- Orchestrator -->
+        <mxCell id="orch" value="λ Orchestrator&#xa;(ACP Client)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ED7100;strokeColor=#C45400;fontColor=#ffffff;fontStyle=1;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="35" y="45" width="110" height="50" as="geometry" />
+        </mxCell>
+
+        <!-- ACP Server -->
+        <mxCell id="acp" value="ACP Server&#xa;JSON-RPC / stdio&#xa;(subprocess)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#9C27B0;strokeColor=#7B1FA2;fontColor=#ffffff;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="185" y="45" width="115" height="50" as="geometry" />
+        </mxCell>
+
+        <!-- Agent API -->
+        <mxCell id="agent-api" value="DevOps Agent&#xa;API (SigV4)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FF9800;strokeColor=#E65100;fontColor=#ffffff;fontStyle=1;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="330" y="45" width="95" height="50" as="geometry" />
+        </mxCell>
+
+        <!-- ACPClient box -->
+        <mxCell id="client-code" value="ACPClient:&#xa;region=agent_region&#xa;space_id=space_id&#xa;user_id=STS identity&#xa;timeout=300s" style="rounded=1;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#7E57C2;fontSize=10;align=left;spacingLeft=8;fontColor=#E0E0E0;" vertex="1" parent="1">
+          <mxGeometry x="35" y="115" width="175" height="85" as="geometry" />
+        </mxCell>
+
+        <!-- Prompt -->
+        <mxCell id="prompt" value="Prompt:&#xa;&quot;Generate mitigation&#xa;for task {task_id}...&#xa;propose remediation&#xa;steps&quot;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#F9A825;fontSize=10;align=left;spacingLeft=8;fontColor=#E0E0E0;" vertex="1" parent="1">
+          <mxGeometry x="235" y="115" width="180" height="85" as="geometry" />
+        </mxCell>
+
+        <!-- Auth -->
+        <mxCell id="auth" value="Auth &amp; Transport:&#xa;• IAM SigV4&#xa;• JSON-RPC / stdio&#xa;• CreateChat → Send" style="rounded=1;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#5C6BC0;fontSize=10;align=left;spacingLeft=8;fontColor=#E0E0E0;" vertex="1" parent="1">
+          <mxGeometry x="35" y="215" width="175" height="72" as="geometry" />
+        </mxCell>
+
+        <!-- Output -->
+        <mxCell id="out1" value="Output:&#xa;Agent starts mitigation" style="rounded=1;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#66BB6A;fontSize=10;align=left;spacingLeft=8;fontColor=#E0E0E0;" vertex="1" parent="1">
+          <mxGeometry x="235" y="215" width="180" height="42" as="geometry" />
+        </mxCell>
+
+        <!-- Block 1 edges -->
+        <mxCell id="e1" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#CE93D8;strokeWidth=1.5;fontSize=10;" edge="1" source="orch" target="acp" parent="1" value="spawn">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e2" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#FFB74D;strokeWidth=1.5;fontSize=10;" edge="1" source="acp" target="agent-api" parent="1" value="SigV4">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- ==================== BLOCK 2: WAIT ==================== -->
+        <mxCell id="b2" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#66BB6A;strokeWidth=2;arcSize=4;" vertex="1" parent="1">
+          <mxGeometry x="460" y="10" width="420" height="425" as="geometry" />
+        </mxCell>
+        <mxCell id="b2-title" value="Wait (EventBridge → SQS → DDB)" style="text;html=1;fontSize=14;fontStyle=1;align=center;fontColor=#A5D6A7;" vertex="1" parent="1">
+          <mxGeometry x="500" y="15" width="340" height="22" as="geometry" />
+        </mxCell>
+
+        <!-- Agent -->
+        <mxCell id="agent2" value="Agent&#xa;(mitigation)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FF9800;strokeColor=#E65100;fontColor=#ffffff;fontStyle=1;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="480" y="45" width="80" height="50" as="geometry" />
+        </mxCell>
+
+        <!-- EventBridge -->
+        <mxCell id="eb" value="⚡ EventBridge" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E91E63;strokeColor=#C2185B;fontColor=#ffffff;fontStyle=1;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="590" y="45" width="100" height="50" as="geometry" />
+        </mxCell>
+
+        <!-- SQS -->
+        <mxCell id="sqs" value="SQS Queue" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#7B1FA2;strokeColor=#4A148C;fontColor=#ffffff;fontStyle=1;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="720" y="45" width="75" height="50" as="geometry" />
+        </mxCell>
+
+        <!-- DynamoDB -->
+        <mxCell id="ddb" value="DDB&#xa;Global" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#2196F3;strokeColor=#1565C0;fontColor=#ffffff;fontStyle=1;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="820" y="45" width="50" height="50" as="geometry" />
+        </mxCell>
+
+        <!-- Block 2 edges (top row) -->
+        <mxCell id="e3" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#F48FB1;strokeWidth=1.5;" edge="1" source="agent2" target="eb" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e4" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#CE93D8;strokeWidth=1.5;" edge="1" source="eb" target="sqs" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e5" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#64B5F6;strokeWidth=1.5;" edge="1" source="sqs" target="ddb" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- DynamoDB details -->
+        <mxCell id="ddb-details" value="DynamoDB Global Table:&#xa;fis-chaos-investigations&#xa;Key: incident_id&#xa;GSI: task_id-index&#xa;Replicated cross-region&#xa;TTL enabled" style="rounded=1;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#64B5F6;fontSize=10;align=left;spacingLeft=8;fontColor=#E0E0E0;" vertex="1" parent="1">
+          <mxGeometry x="480" y="115" width="195" height="100" as="geometry" />
+        </mxCell>
+
+        <!-- Dispatcher Lambda -->
+        <mxCell id="dispatcher" value="Dispatcher λ:&#xa;SQS → parse event&#xa;→ write to DDB" style="rounded=1;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#FFB74D;fontSize=10;align=left;spacingLeft=8;fontColor=#E0E0E0;" vertex="1" parent="1">
+          <mxGeometry x="700" y="115" width="155" height="52" as="geometry" />
+        </mxCell>
+
+        <!-- DDB writes -->
+        <mxCell id="ddb-writes" value="DDB writes:&#xa;• &quot;Mitigation In Progress&quot;&#xa;• &quot;Mitigation Completed&quot;&#xa;• &quot;Mitigation Failed&quot;&#xa;+ execution_id, region" style="rounded=1;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#66BB6A;fontSize=10;align=left;spacingLeft=8;fontColor=#E0E0E0;" vertex="1" parent="1">
+          <mxGeometry x="480" y="230" width="195" height="85" as="geometry" />
+        </mxCell>
+
+        <!-- Orch polls -->
+        <mxCell id="poll" value="Orch polls DDB:&#xa;by incident_id&#xa;timeout 300s&#xa;5s intervals" style="rounded=1;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#81C784;fontSize=10;align=left;spacingLeft=8;fontColor=#E0E0E0;" vertex="1" parent="1">
+          <mxGeometry x="700" y="185" width="155" height="70" as="geometry" />
+        </mxCell>
+
+        <!-- Edge dispatcher → ddb -->
+        <mxCell id="e6" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#64B5F6;strokeWidth=1.5;" edge="1" source="dispatcher" target="ddb-details" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- ==================== BLOCK 3: FETCH DETAILS ==================== -->
+        <mxCell id="b3" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#FFB74D;strokeWidth=2;arcSize=4;" vertex="1" parent="1">
+          <mxGeometry x="905" y="10" width="500" height="425" as="geometry" />
+        </mxCell>
+        <mxCell id="b3-title" value="Fetch Details (API)" style="text;html=1;fontSize=14;fontStyle=1;align=center;fontColor=#FFD54F;" vertex="1" parent="1">
+          <mxGeometry x="1050" y="15" width="210" height="22" as="geometry" />
+        </mxCell>
+
+        <!-- Agent API -->
+        <mxCell id="api2" value="⚙ Agent API&#xa;(SigV4)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ED7100;strokeColor=#C45400;fontColor=#ffffff;fontStyle=1;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="925" y="45" width="110" height="50" as="geometry" />
+        </mxCell>
+
+        <!-- S3 -->
+        <mxCell id="s3" value="S3&#xa;results" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#3F8624;strokeColor=#2D6B19;fontColor=#ffffff;fontStyle=1;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="1310" y="45" width="75" height="50" as="geometry" />
+        </mxCell>
+
+        <!-- API Call -->
+        <mxCell id="api-call" value="list_journal_records(&#xa;  agentSpaceId,&#xa;  executionId,&#xa;  &quot;mitigation_summary_md&quot;&#xa;)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#FFB74D;fontSize=10;align=left;spacingLeft=8;fontColor=#E0E0E0;" vertex="1" parent="1">
+          <mxGeometry x="925" y="115" width="290" height="80" as="geometry" />
+        </mxCell>
+
+        <!-- Response -->
+        <mxCell id="response" value="Response (markdown):&#xa;## Action&#xa;  remediation step&#xa;## Reasoning&#xa;  why it fixes root cause&#xa;## Steps" style="rounded=1;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#66BB6A;fontSize=10;align=left;spacingLeft=8;fontColor=#E0E0E0;" vertex="1" parent="1">
+          <mxGeometry x="925" y="215" width="290" height="100" as="geometry" />
+        </mxCell>
+
+        <!-- S3 persist -->
+        <mxCell id="persist" value="Persist to S3:&#xa;mitigation_status&#xa;mitigation_action&#xa;mitigation_reasoning&#xa;mitigation_full" style="rounded=1;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#81C784;fontSize=10;align=left;spacingLeft=8;fontColor=#E0E0E0;" vertex="1" parent="1">
+          <mxGeometry x="1240" y="115" width="150" height="85" as="geometry" />
+        </mxCell>
+
+        <!-- Block 3 edges -->
+        <mxCell id="e7" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#FFB74D;strokeWidth=1.5;" edge="1" source="api2" target="api-call" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e8" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#66BB6A;strokeWidth=1.5;" edge="1" source="api-call" target="response" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e9" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#81C784;strokeWidth=1.5;" edge="1" source="api-call" target="persist" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e10" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#81C784;strokeWidth=1.5;dashed=1;" edge="1" source="s3" target="persist" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- ==================== FLOW ARROWS BETWEEN BLOCKS ==================== -->
+        <mxCell id="f1" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#90CAF9;strokeWidth=2.5;fontSize=10;fontColor=#90CAF9;" edge="1" source="out1" target="agent2" parent="1" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="f2" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#90CAF9;strokeWidth=2.5;fontSize=10;fontColor=#90CAF9;" edge="1" source="poll" target="api2" parent="1" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

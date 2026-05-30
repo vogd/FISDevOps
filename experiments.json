@@ -1,0 +1,280 @@
+{
+  "cluster_name": "chaos-cluster",
+  "namespace": "app",
+  "chaos_mesh_namespace": "chaos-mesh",
+  "log_group": "fis-chaos",
+  "cooldown_seconds": 120,
+  "alarm_poll_interval_seconds": 10,
+  "alarm_timeout_seconds": 300,
+  "experiments": [
+    {
+      "id": "pod-kill",
+      "name": "Pod Kill",
+      "description": "Kill application pods to test restart resilience",
+      "chaos_kind": "PodChaos",
+      "api_version": "chaos-mesh.org/v1alpha1",
+      "duration": "PT10M",
+      "expected_alarm": "chaos-pod-restart",
+      "ground_truth": "pod_failure",
+      "spec": {
+        "action": "pod-kill",
+        "mode": "one",
+        "selector": {
+          "namespaces": [
+            "app"
+          ],
+          "labelSelectors": {
+            "app.kubernetes.io/name": "ui"
+          }
+        }
+      }
+    },
+    {
+      "id": "container-kill",
+      "name": "Container Kill",
+      "description": "Kill specific container within a pod",
+      "chaos_kind": "PodChaos",
+      "api_version": "chaos-mesh.org/v1alpha1",
+      "duration": "PT10M",
+      "expected_alarm": "chaos-pod-restart",
+      "ground_truth": "container_failure",
+      "spec": {
+        "action": "container-kill",
+        "mode": "one",
+        "containerNames": [
+          "checkout"
+        ],
+        "selector": {
+          "namespaces": [
+            "app"
+          ],
+          "labelSelectors": {
+            "app.kubernetes.io/name": "checkout"
+          }
+        }
+      }
+    },
+    {
+      "id": "network-delay",
+      "name": "Network Delay",
+      "description": "Inject 500ms network latency on app pods",
+      "chaos_kind": "NetworkChaos",
+      "api_version": "chaos-mesh.org/v1alpha1",
+      "duration": "PT10M",
+      "expected_alarm": "chaos-high-latency",
+      "ground_truth": "network_latency",
+      "spec": {
+        "action": "delay",
+        "mode": "all",
+        "selector": {
+          "namespaces": [
+            "app"
+          ],
+          "labelSelectors": {
+            "app.kubernetes.io/name": "ui"
+          }
+        },
+        "delay": {
+          "latency": "500ms",
+          "jitter": "50ms",
+          "correlation": "50"
+        },
+        "duration": "90s"
+      }
+    },
+    {
+      "id": "network-loss",
+      "name": "Packet Loss",
+      "description": "Inject 80% packet loss on app pods",
+      "chaos_kind": "NetworkChaos",
+      "api_version": "chaos-mesh.org/v1alpha1",
+      "duration": "PT10M",
+      "expected_alarm": "chaos-high-error-rate",
+      "ground_truth": "network_packet_loss",
+      "spec": {
+        "action": "loss",
+        "mode": "all",
+        "selector": {
+          "namespaces": [
+            "app"
+          ],
+          "labelSelectors": {
+            "app.kubernetes.io/name": "ui"
+          }
+        },
+        "loss": {
+          "loss": "80",
+          "correlation": "25"
+        },
+        "duration": "90s"
+      }
+    },
+    {
+      "id": "network-partition",
+      "name": "Network Partition",
+      "description": "Partition UI from checkout service",
+      "chaos_kind": "NetworkChaos",
+      "api_version": "chaos-mesh.org/v1alpha1",
+      "duration": "PT10M",
+      "expected_alarm": "chaos-high-error-rate",
+      "ground_truth": "network_partition",
+      "spec": {
+        "action": "partition",
+        "mode": "all",
+        "selector": {
+          "namespaces": [
+            "app"
+          ],
+          "labelSelectors": {
+            "app.kubernetes.io/name": "ui"
+          }
+        },
+        "direction": "both",
+        "target": {
+          "mode": "all",
+          "selector": {
+            "namespaces": [
+              "app"
+            ],
+            "labelSelectors": {
+              "app.kubernetes.io/name": "checkout"
+            }
+          }
+        },
+        "duration": "90s"
+      }
+    },
+    {
+      "id": "cpu-stress",
+      "name": "CPU Stress",
+      "description": "Spike CPU to 100% on app pods",
+      "chaos_kind": "StressChaos",
+      "api_version": "chaos-mesh.org/v1alpha1",
+      "duration": "PT10M",
+      "expected_alarm": "chaos-high-cpu",
+      "ground_truth": "cpu_pressure",
+      "spec": {
+        "mode": "one",
+        "selector": {
+          "namespaces": [
+            "app"
+          ],
+          "labelSelectors": {
+            "app.kubernetes.io/name": "ui"
+          }
+        },
+        "stressors": {
+          "cpu": {
+            "workers": 2,
+            "load": 100
+          }
+        },
+        "duration": "90s"
+      }
+    },
+    {
+      "id": "memory-stress",
+      "name": "Memory Stress",
+      "description": "Consume 256MB memory on app pods",
+      "chaos_kind": "StressChaos",
+      "api_version": "chaos-mesh.org/v1alpha1",
+      "duration": "PT10M",
+      "expected_alarm": "chaos-high-memory",
+      "ground_truth": "memory_pressure",
+      "spec": {
+        "mode": "one",
+        "selector": {
+          "namespaces": [
+            "app"
+          ],
+          "labelSelectors": {
+            "app.kubernetes.io/name": "ui"
+          }
+        },
+        "stressors": {
+          "memory": {
+            "workers": 1,
+            "size": "256MB"
+          }
+        },
+        "duration": "90s"
+      }
+    },
+    {
+      "id": "io-delay",
+      "name": "IO Delay",
+      "description": "Inject 200ms filesystem IO latency",
+      "chaos_kind": "IOChaos",
+      "api_version": "chaos-mesh.org/v1alpha1",
+      "duration": "PT10M",
+      "expected_alarm": "chaos-high-latency",
+      "ground_truth": "io_latency",
+      "spec": {
+        "action": "latency",
+        "mode": "one",
+        "selector": {
+          "namespaces": [
+            "app"
+          ],
+          "labelSelectors": {
+            "app.kubernetes.io/name": "catalog"
+          }
+        },
+        "delay": "200ms",
+        "volumePath": "/",
+        "percent": 100,
+        "duration": "90s"
+      }
+    },
+    {
+      "id": "http-abort",
+      "name": "HTTP Abort",
+      "description": "Abort HTTP requests with 503 status",
+      "chaos_kind": "HTTPChaos",
+      "api_version": "chaos-mesh.org/v1alpha1",
+      "duration": "PT10M",
+      "expected_alarm": "chaos-high-error-rate",
+      "ground_truth": "http_fault",
+      "spec": {
+        "mode": "all",
+        "selector": {
+          "namespaces": [
+            "app"
+          ],
+          "labelSelectors": {
+            "app.kubernetes.io/name": "ui"
+          }
+        },
+        "target": "Request",
+        "port": 8080,
+        "abort": true,
+        "code": 503,
+        "duration": "90s"
+      }
+    },
+    {
+      "id": "dns-error",
+      "name": "DNS Error",
+      "description": "Inject DNS resolution failures",
+      "chaos_kind": "DNSChaos",
+      "api_version": "chaos-mesh.org/v1alpha1",
+      "duration": "PT10M",
+      "expected_alarm": "chaos-high-error-rate",
+      "ground_truth": "dns_failure",
+      "spec": {
+        "action": "error",
+        "mode": "all",
+        "selector": {
+          "namespaces": [
+            "app"
+          ],
+          "labelSelectors": {
+            "app.kubernetes.io/name": "ui"
+          }
+        },
+        "scope": "inner",
+        "duration": "90s"
+      }
+    }
+  ]
+}

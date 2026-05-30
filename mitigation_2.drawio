@@ -1,0 +1,265 @@
+<mxfile host="app.diagrams.net" agent="Kiro">
+  <diagram name="ACP Mitigation Flow" id="mitigation-flow">
+    <mxGraphModel dx="1589" dy="988" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1600" pageHeight="900" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="b4a_border" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;dashed=1;arcSize=8;" value="" vertex="1">
+          <mxGeometry height="280" width="500" x="20" y="20" as="geometry" />
+        </mxCell>
+        <mxCell id="b4a_title" parent="1" style="text;html=1;align=left;verticalAlign=top;spacingLeft=10;spacingTop=5;fontSize=13;" value="&lt;b&gt;Block 4a: Request Mitigation (ACP)&lt;/b&gt;" vertex="1">
+          <mxGeometry height="30" width="300" x="30" y="25" as="geometry" />
+        </mxCell>
+        <mxCell id="b4a_step1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=11;" value="1. Spawn acp_server subprocess" vertex="1">
+          <mxGeometry height="35" width="220" x="40" y="65" as="geometry" />
+        </mxCell>
+        <mxCell id="b4a_step2" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=11;" value="2. Initialize session (CreateChat API)" vertex="1">
+          <mxGeometry height="35" width="220" x="40" y="110" as="geometry" />
+        </mxCell>
+        <mxCell id="b4a_step3" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=11;" value="3. Send prompt:&#xa;&#39;Generate mitigation for task X&#39;" vertex="1">
+          <mxGeometry height="40" width="220" x="40" y="155" as="geometry" />
+        </mxCell>
+        <mxCell id="b4a_step4" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=11;" value="4. Receive streaming response" vertex="1">
+          <mxGeometry height="35" width="220" x="40" y="205" as="geometry" />
+        </mxCell>
+        <mxCell id="b4a_auth" parent="1" style="text;html=1;align=left;verticalAlign=middle;fontSize=10;fontColor=#333333;" value="&lt;i&gt;Auth: IAM SigV4&lt;br&gt;Transport: JSON-RPC/stdio&lt;/i&gt;" vertex="1">
+          <mxGeometry height="40" width="200" x="40" y="250" as="geometry" />
+        </mxCell>
+        <mxCell id="b4a_a1" edge="1" parent="1" source="b4a_step1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;" target="b4a_step2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="b4a_a2" edge="1" parent="1" source="b4a_step2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;" target="b4a_step3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="b4a_a3" edge="1" parent="1" source="b4a_step3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;" target="b4a_step4">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="b4b_border" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;dashed=1;arcSize=8;" value="" vertex="1">
+          <mxGeometry height="280" width="520" x="540" y="20" as="geometry" />
+        </mxCell>
+        <mxCell id="b4b_title" parent="1" style="text;html=1;align=left;verticalAlign=top;spacingLeft=10;spacingTop=5;fontSize=13;" value="&lt;b&gt;Block 4b: Wait for Mitigation (EventBridge → SQS OUTPUT)&lt;/b&gt;" vertex="1">
+          <mxGeometry height="30" width="480" x="550" y="25" as="geometry" />
+        </mxCell>
+        <mxCell id="b4b_s1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=11;" value="Agent starts mitigation async" vertex="1">
+          <mxGeometry height="30" width="230" x="560" y="65" as="geometry" />
+        </mxCell>
+        <mxCell id="b4b_s2" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;" value="EB: &#39;Mitigation In Progress&#39; → SQS (OUTPUT)" vertex="1">
+          <mxGeometry height="30" width="280" x="560" y="105" as="geometry" />
+        </mxCell>
+        <mxCell id="b4b_s3" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;" value="EB: &#39;Mitigation Completed&#39; → SQS (OUTPUT)" vertex="1">
+          <mxGeometry height="30" width="280" x="560" y="145" as="geometry" />
+        </mxCell>
+        <mxCell id="b4b_s4" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;" value="Dispatcher Lambda → DynamoDB Global Table" vertex="1">
+          <mxGeometry height="30" width="280" x="560" y="185" as="geometry" />
+        </mxCell>
+        <mxCell id="b4b_s5" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=11;" value="Orchestrator polls DynamoDB (not SQS)" vertex="1">
+          <mxGeometry height="30" width="250" x="560" y="225" as="geometry" />
+        </mxCell>
+        <mxCell id="b4b_output" parent="1" style="text;html=1;align=left;verticalAlign=middle;fontSize=10;fontColor=#333333;" value="&lt;i&gt;Output: execution_id, summary_record_id&lt;/i&gt;" vertex="1">
+          <mxGeometry height="25" width="250" x="560" y="265" as="geometry" />
+        </mxCell>
+        <mxCell id="b4c_border" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;dashed=1;arcSize=8;" value="" vertex="1">
+          <mxGeometry height="280" width="500" x="1080" y="20" as="geometry" />
+        </mxCell>
+        <mxCell id="b4c_title" parent="1" style="text;html=1;align=left;verticalAlign=top;spacingLeft=10;spacingTop=5;fontSize=13;" value="&lt;b&gt;Block 4c: Fetch Mitigation Details (API)&lt;/b&gt;" vertex="1">
+          <mxGeometry height="30" width="350" x="1090" y="25" as="geometry" />
+        </mxCell>
+        <mxCell id="b4c_s1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=11;" value="ListJournalRecords(executionId,&#xa;&#39;mitigation_summary_md&#39;)" vertex="1">
+          <mxGeometry height="40" width="260" x="1100" y="70" as="geometry" />
+        </mxCell>
+        <mxCell id="b4c_s2" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=11;align=left;spacingLeft=10;" value="Returns:&#xa;## Action&#xa;## Reasoning&#xa;## Steps" vertex="1">
+          <mxGeometry height="70" width="200" x="1100" y="130" as="geometry" />
+        </mxCell>
+        <mxCell id="b4c_s3" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=11;" value="Write to S3 result JSON" vertex="1">
+          <mxGeometry height="35" width="200" x="1100" y="220" as="geometry" />
+        </mxCell>
+        <mxCell id="b4c_a1" edge="1" parent="1" source="b4c_s1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;" target="b4c_s2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="b4c_a2" edge="1" parent="1" source="b4c_s2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;" target="b4c_s3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="seq_title" parent="1" style="text;html=1;align=center;verticalAlign=top;fontSize=14;" value="&lt;b&gt;Sequence: ACP Mitigation Flow&lt;/b&gt;" vertex="1">
+          <mxGeometry height="30" width="400" x="600" y="320" as="geometry" />
+        </mxCell>
+        <mxCell id="lf_orch" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=10;" value="&lt;b&gt;Orchestrator&lt;/b&gt;" vertex="1">
+          <mxGeometry height="30" width="100" x="40" y="355" as="geometry" />
+        </mxCell>
+        <mxCell id="lf_acp" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=10;" value="&lt;b&gt;ACP Server&lt;/b&gt;" vertex="1">
+          <mxGeometry height="30" width="100" x="220" y="355" as="geometry" />
+        </mxCell>
+        <mxCell id="lf_agent" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=10;" value="&lt;b&gt;DevOps Agent&lt;br&gt;API&lt;/b&gt;" vertex="1">
+          <mxGeometry height="30" width="100" x="410" y="355" as="geometry" />
+        </mxCell>
+        <mxCell id="lf_eb" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=10;" value="&lt;b&gt;EventBridge&lt;/b&gt;" vertex="1">
+          <mxGeometry height="30" width="100" x="600" y="355" as="geometry" />
+        </mxCell>
+        <mxCell id="lf_sqs" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=10;" value="&lt;b&gt;SQS&lt;br&gt;(OUTPUT)&lt;/b&gt;" vertex="1">
+          <mxGeometry height="30" width="100" x="790" y="355" as="geometry" />
+        </mxCell>
+        <mxCell id="lf_disp" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=10;" value="&lt;b&gt;Dispatcher&lt;/b&gt;" vertex="1">
+          <mxGeometry height="30" width="100" x="980" y="355" as="geometry" />
+        </mxCell>
+        <mxCell id="lf_ddb" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=10;" value="&lt;b&gt;DynamoDB&lt;/b&gt;" vertex="1">
+          <mxGeometry height="30" width="100" x="1170" y="355" as="geometry" />
+        </mxCell>
+        <mxCell id="ll_orch" edge="1" parent="1" style="endArrow=none;dashed=1;strokeColor=#999999;" value="">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="90" y="385" as="sourcePoint" />
+            <mxPoint x="90" y="880" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="ll_acp" edge="1" parent="1" style="endArrow=none;dashed=1;strokeColor=#999999;" value="">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="270" y="385" as="sourcePoint" />
+            <mxPoint x="270" y="880" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="ll_agent" edge="1" parent="1" style="endArrow=none;dashed=1;strokeColor=#999999;" value="">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="460" y="385" as="sourcePoint" />
+            <mxPoint x="460" y="880" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="ll_eb" edge="1" parent="1" style="endArrow=none;dashed=1;strokeColor=#999999;" value="">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="650" y="385" as="sourcePoint" />
+            <mxPoint x="650" y="880" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="ll_sqs" edge="1" parent="1" style="endArrow=none;dashed=1;strokeColor=#999999;" value="">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="840" y="385" as="sourcePoint" />
+            <mxPoint x="840" y="880" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="ll_disp" edge="1" parent="1" style="endArrow=none;dashed=1;strokeColor=#999999;" value="">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1030" y="385" as="sourcePoint" />
+            <mxPoint x="1030" y="880" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="ll_ddb" edge="1" parent="1" style="endArrow=none;dashed=1;strokeColor=#999999;" value="">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1220" y="385" as="sourcePoint" />
+            <mxPoint x="1220" y="880" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="msg1" edge="1" parent="1" style="endArrow=block;endFill=1;strokeColor=#6c8ebf;fontSize=9;" value="spawn subprocess">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="90" y="410" as="sourcePoint" />
+            <mxPoint x="270" y="410" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="msg2" edge="1" parent="1" style="endArrow=block;endFill=1;strokeColor=#6c8ebf;fontSize=9;" value="CreateChat (IAM SigV4)">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="270" y="440" as="sourcePoint" />
+            <mxPoint x="460" y="440" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="msg3" edge="1" parent="1" style="endArrow=open;dashed=1;strokeColor=#6c8ebf;fontSize=9;" value="session_id">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="460" y="465" as="sourcePoint" />
+            <mxPoint x="270" y="465" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="msg4" edge="1" parent="1" style="endArrow=block;endFill=1;strokeColor=#6c8ebf;fontSize=9;" value="&#39;Generate mitigation for task X&#39;">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="90" y="495" as="sourcePoint" />
+            <mxPoint x="270" y="495" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="msg5" edge="1" parent="1" style="endArrow=block;endFill=1;strokeColor=#9673a6;fontSize=9;" value="JSON-RPC → Agent API">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="270" y="520" as="sourcePoint" />
+            <mxPoint x="460" y="520" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="msg6" edge="1" parent="1" style="endArrow=open;dashed=1;strokeColor=#9673a6;fontSize=9;" value="streaming response">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="270" y="545" as="sourcePoint" />
+            <mxPoint x="90" y="545" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="msg7" edge="1" parent="1" style="endArrow=block;endFill=1;strokeColor=#9673a6;fontSize=9;" value="starts mitigation (async)">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="460" y="580" as="sourcePoint" />
+            <mxPoint x="650" y="580" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="msg7_label" parent="1" style="text;html=1;fontSize=9;fontColor=#82b366;align=center;" value="&lt;i&gt;&#39;Mitigation In Progress&#39;&lt;/i&gt;" vertex="1">
+          <mxGeometry height="15" width="160" x="480" y="540" as="geometry" />
+        </mxCell>
+        <mxCell id="msg8" edge="1" parent="1" style="endArrow=block;endFill=1;strokeColor=#82b366;fontSize=9;" value="rule → SQS (OUTPUT)">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="650" y="610" as="sourcePoint" />
+            <mxPoint x="840" y="610" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="msg9" edge="1" parent="1" style="endArrow=block;endFill=1;strokeColor=#82b366;fontSize=9;" value="SQS trigger">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="840" y="640" as="sourcePoint" />
+            <mxPoint x="1030" y="640" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="msg10" edge="1" parent="1" style="endArrow=block;endFill=1;strokeColor=#d6b656;fontSize=9;" value="PutItem(status=IN_PROGRESS)">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1030" y="670" as="sourcePoint" />
+            <mxPoint x="1220" y="670" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="msg11" edge="1" parent="1" style="endArrow=block;endFill=1;strokeColor=#d6b656;dashed=1;fontSize=9;" value="poll: GetItem(incident_id)">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="90" y="700" as="sourcePoint" />
+            <mxPoint x="1220" y="700" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="msg11_note" parent="1" style="text;html=1;fontSize=8;fontColor=#999999;" value="&lt;i&gt;every 5s&lt;/i&gt;" vertex="1">
+          <mxGeometry height="15" width="60" x="600" y="685" as="geometry" />
+        </mxCell>
+        <mxCell id="msg12" edge="1" parent="1" style="endArrow=block;endFill=1;strokeColor=#9673a6;fontSize=9;" value="&#39;Mitigation Completed&#39;">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="460" y="735" as="sourcePoint" />
+            <mxPoint x="650" y="735" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="msg13" edge="1" parent="1" style="endArrow=block;endFill=1;strokeColor=#82b366;fontSize=9;" value="rule → SQS">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="650" y="760" as="sourcePoint" />
+            <mxPoint x="840" y="760" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="msg14" edge="1" parent="1" style="endArrow=block;endFill=1;strokeColor=#82b366;fontSize=9;" value="SQS trigger">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="840" y="785" as="sourcePoint" />
+            <mxPoint x="1030" y="785" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="msg15" edge="1" parent="1" style="endArrow=block;endFill=1;strokeColor=#d6b656;fontSize=9;" value="UpdateItem(status=COMPLETED, exec_id)">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1030" y="810" as="sourcePoint" />
+            <mxPoint x="1220" y="810" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="msg16" edge="1" parent="1" style="endArrow=open;dashed=1;strokeColor=#d6b656;fontSize=9;" value="GetItem → COMPLETED + execution_id">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1220" y="840" as="sourcePoint" />
+            <mxPoint x="90" y="840" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="msg17" edge="1" parent="1" style="endArrow=block;endFill=1;strokeColor=#d6b656;fontSize=9;" value="ListJournalRecords(exec_id, &#39;mitigation_summary_md&#39;)">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="90" y="865" as="sourcePoint" />
+            <mxPoint x="460" y="865" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="msg18" edge="1" parent="1" style="endArrow=open;dashed=1;strokeColor=#d6b656;fontSize=9;" value="## Action, ## Reasoning, ## Steps → write S3">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="460" y="885" as="sourcePoint" />
+            <mxPoint x="90" y="885" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
