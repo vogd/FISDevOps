@@ -13,6 +13,8 @@ resource "aws_cloudfront_distribution" "graph" {
   default_root_object = "index.html"
   comment             = "FIS Chaos Incident Graph"
 
+  wait_for_deployment = false
+
   origin {
     domain_name              = aws_s3_bucket.results.bucket_regional_domain_name
     origin_id                = "s3-graph"
