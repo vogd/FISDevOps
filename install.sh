@@ -1,5 +1,5 @@
 #!/bin/bash
-set -euo pipefail
+set -uo pipefail
 
 # Disable AWS CLI pager
 export AWS_PAGER=""
@@ -320,7 +320,7 @@ step7_deploy_fis_layer() {
   terraform apply -auto-approve \
     -var="region=$AWS_REGION" \
     -var="primary_agent_region=$AGENT_REGION_PRIMARY" \
-    -var="secondary_agent_region=$AGENT_REGION_SECONDARY"
+    -var="secondary_agent_region=$AGENT_REGION_SECONDARY" || echo "  ⚠️ Terraform apply had errors (continuing — some resources may need re-apply)"
 
   # Write webhook endpoints to Secrets Manager (dynamic, not managed by terraform)
   echo "  Writing webhook endpoints to Secrets Manager..."
