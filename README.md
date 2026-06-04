@@ -14,13 +14,13 @@ FISDevOps demonstrates **multi-region, multi-account incident resolution at scal
 4. **Build organization-wide dependency graph** — All incident status, affected services, resource ARNs, and cascade chains are written to Neptune graph DB, building a live dependency map across the entire organization.
 5. **Self-healing path** — Mitigation steps can be fed into a code assistant tool (e.g., Amazon Q Developer) for automated remediation.
 
-![FISDevOps Architecture](images/architecture.png)
 
 ---
 
 
 ## Architecture Overview
 
+![Architecture Overview](images/architecture.png)
 
 The system spans multiple AWS regions with the following core components:
 
@@ -65,7 +65,7 @@ The system spans multiple AWS regions with the following core components:
    c. DynamoDB Stream → neptune_feeder → Neptune (graph vertices/edges)
    d. S3 graph/*.json → SQS (60s batch) → graph_builder → S3 graph/index.html → CloudFront
 9. orchestrator.py polls DynamoDB → retrieves RCA → scores with Claude → writes to S3
-```bash
+```
 
 ---
 
@@ -93,7 +93,7 @@ cd FISDevOps
 
 # EKS + Chaos Mesh infrastructure (required for FIS experiments)
 git clone https://github.com/aws-samples/amazon-eks-chaos.git
-```bash
+```
 
 ### AWS Account Setup
 
@@ -240,7 +240,7 @@ Before running experiments, activate the environment:
 
 ```bash
 source .venv/bin/activate && source .env
-```bash
+```
 
 ### Run a Specific Experiment
 
@@ -252,7 +252,7 @@ python orchestrator.py \
   --agent-space-id "$AGENT_SPACE_ID" \
   --bucket "$RESULTS_BUCKET" \
   --experiment cpu-stress
-```bash
+```
 
 ### Run Random Experiments (with limit)
 
@@ -264,7 +264,7 @@ python orchestrator.py \
   --agent-space-id "$AGENT_SPACE_ID" \
   --bucket "$RESULTS_BUCKET" \
   --random --limit 10
-```bash
+```
 
 ### Run with Failover (force secondary region)
 
@@ -276,7 +276,7 @@ python orchestrator.py \
   --agent-space-id "$AGENT_SPACE_ID" \
   --bucket "$RESULTS_BUCKET" \
   --random --limit 2 --failover
-```bash
+```
 
 The `--failover` flag sets `force_target` in the event detail, routing the incident directly to the secondary agent space (eu-central-1) bypassing the Global Endpoint's capacity routing.
 
@@ -318,8 +318,10 @@ All experiments use `aws:eks:inject-kubernetes-custom-resource` FIS action with 
 
 ## Global Endpoint Routing
 
+![Dispatcher Logic](images/dispatcher-logic.png)
 
-![Dispatcher Logic](images/dispatcher-logic.svg)
+![Region A/B Routing](images/simple_regionAB.png)
+
 
 ### How Incidents Are Routed
 
@@ -329,9 +331,8 @@ orchestrator.py → PutEvents(EndpointId) → EventBridge Global Endpoint
   → Routes to healthy region (primary: eu-west-1, secondary: eu-central-1)
   → Custom bus "fis-chaos-global-inbound" → EventBridge rule → SQS queue
   → global_forwarder Lambda
-```bash
+```
 
-![Simple Region A/B Routing](images/simple_regionAB.svg)
 
 ### Global Forwarder (`fis-chaos-global-forwarder`)
 
@@ -372,8 +373,8 @@ This separates infrastructure provisioning from request routing.
 
 ## Dispatcher & DynamoDB
 
+![DynamoDB as Single Source of Truth](images/dynamodb-rca-architecture.png)
 
-![DynamoDB RCA Architecture](images/dynamodb-rca-architecture.svg)
 
 ### Dispatcher (`fis-chaos-dispatcher`)
 
@@ -429,8 +430,8 @@ The dispatcher Lambda is triggered by SQS receiving agent lifecycle events from 
 
 ## Scoring Pipeline
 
-
 ![Scoring Pipeline](images/scoring.png)
+
 
 ### Tier 1: Keyword Match (fast, local)
 
@@ -441,7 +442,7 @@ def score_rca(rca_text, ground_truth):
     gt_keywords = ground_truth.replace("_", " ").split()
     matched = any(kw in rca_lower for kw in gt_keywords)
     return {"match": matched, "snippet": ...}
-```bash
+```
 
 ### Tier 2: Bedrock Claude (deep, semantic)
 
@@ -469,12 +470,14 @@ Output location: `s3://fis-chaos-results-{account_id}/scorecards/latest.json`
 
 ## Skills & S3 Knowledge Sharing
 
-
 ![Skill Setup](images/skillsetup.png)
 
 ![Historical Skills](images/historicalskills.png)
 
 ![Skills S3 Architecture](images/skills-s3-architecture_2.png)
+
+
+
 
 ### Skill 1: `structured-resource-identifiers`
 
@@ -498,7 +501,7 @@ The agent reads historical results from S3 at the start of every investigation:
 ```bash
 Investigation → RCA → S3 (experiments/) → Next Investigation reads history
                     → Scorecard → Agent reads accuracy → Adjusts approach
-```bash
+```
 
 **Benefit:** Avoids redundant analysis, ensures continuity across failover, prioritizes historically frequent root causes.
 
@@ -551,10 +554,11 @@ Runs on a 5-minute EventBridge schedule. Syncs AWS Config resources into Neptune
 
 ## Example Gremlin Queries (Neptune)
 
-
 ![Gremlin Query Example](images/gremlin1.png)
 
 ![Gremlin Graph Visualization](images/gremlin2.png)
+
+
 
 ```groovy
 // Find all resources affected by a specific incident
@@ -583,15 +587,16 @@ g.V().hasLabel('Resource')
   .by(__.in('affects').count())
   .order().by('count', desc)
   .limit(10)
-```bash
+```
 
 
 ## Incident Graph Visualization
 
-
-![Graph Dependency Flow](images/graph-dependency-flow.svg)
+![Graph Dependency Flow](images/graph-dependency-flow.png)
 
 ![Incident Dependency Graph](images/dependancy.png)
+
+
 
 ### Graph Builder (`fis-chaos-graph-builder`)
 
@@ -668,7 +673,7 @@ python3 orchestrator.py --experiment cpu-stress --mitigation
 
 # For an existing investigation by task_id
 python3 orchestrator.py --request-mitigation TASK_ID
-```bash
+```
 
 ### ACP Flow
 
@@ -710,7 +715,7 @@ client = ACPClient(
 
 # Request mitigation for a completed investigation
 client.request_mitigation(task_id="44626763-9676-42cc-bdbd-9c45d2a34334")
-```bash
+```
 
 ## Configuration
 
@@ -738,7 +743,7 @@ Secret name: `fis-chaos/webhook-proxy`
     }
   ]
 }
-```bash
+```
 
 ### Adding New Agent Spaces
 
@@ -821,7 +826,7 @@ AWS_PROFILE=<YOUR_PROFILE> aws s3 presign \
 AWS_PROFILE=<YOUR_PROFILE> aws secretsmanager get-secret-value \
   --secret-id "fis-chaos/webhook-proxy" --region eu-west-1 \
   --query 'SecretString' --output text | python3 -m json.tool
-```bash
+```
 
 
 ## File Index
@@ -871,15 +876,54 @@ AWS_PROFILE=<YOUR_PROFILE> aws secretsmanager get-secret-value \
 
 ### Diagrams
 
+#### images/ (referenced in README)
+
 | File | Description |
 |------|-------------|
-| `architecture.png` | Main architecture diagram |
-| `scoring.png` | Scoring pipeline flow |
-| `skills-s3-architecture_2.png` | S3 skills architecture |
-| `dynamodb-rca-architecture.svg` | DynamoDB RCA architecture |
-| `dispatcher-logic.svg` | Dispatcher logic flow |
-| `graph-dependency-flow.svg` | Graph dependency flow |
-| `simple_regionAB.svg` | Simple region A/B routing |
+| `images/architecture.png` | Main architecture diagram |
+| `images/scoring.png` | Scoring pipeline flow |
+| `images/skills-s3-architecture_2.png` | S3 skills architecture |
+| `images/dynamodb-rca-architecture.svg` | DynamoDB as single source of truth — writers/readers/schema |
+| `images/dispatcher-logic.svg` | Global Endpoint → Forwarder → Agent → Dispatcher flow |
+| `images/graph-dependency-flow.svg` | Data sources → Neptune → D3.js visualization pipeline |
+| `images/simple_regionAB.svg` | Region A/B routing with scoring and graph builder |
+
+#### docs/ (detailed flow diagrams)
+
+| File | Description |
+|------|-------------|
+| `docs/acp-mitigation-flow.svg` | ACP mitigation request → Agent API → S3 persistence flow |
+| `docs/scoring-pipeline.svg` | Two-tier scoring: keyword match + Bedrock Claude evaluation |
+| `docs/investigation-pipeline-flow.svg` | Multi-alert deduplication and workspace routing |
+| `docs/multi-investigation-lifecycle.svg` | Context windows, linking, and cross-region routing |
+
+#### docs/experiments/ (experiment result charts)
+
+| File | Description |
+|------|-------------|
+| `docs/experiments/token-efficiency-comparison.svg` | Token consumption: S3 Skill vs MCP Server |
+| `docs/experiments/s3-accuracy-comparison.svg` | RCA accuracy with/without S3 knowledge access |
+| `docs/experiments/s3-speed-accuracy-merged.svg` | Investigation duration impact of S3 skill |
+
+#### .drawio source files
+
+| File | Generated by | Description |
+|------|-------------|-------------|
+| `simple_regionAB.drawio` | diagrams.net (web) | Source for simple_regionAB.svg |
+| `awsdiagram_2.drawio` | **Kiro CLI** | HA multi-region architecture |
+| `skills-s3-architecture.drawio` | draw.io (Electron v29.6.1) | Original S3 skills architecture |
+| `skills-s3-architecture_2.drawio` | **Kiro CLI** | Revised S3 skills architecture |
+| `investigation-mitigation-overview.drawio` | diagrams.net (web) | Investigation + mitigation overview |
+| `architecture_2.drawio` | **Kiro CLI** | Detailed FIS DevOps HA architecture |
+| `acp-mitigation-flow.drawio` | diagrams.net (web) | Source for ACP mitigation flow |
+| `scoring-pipeline.drawio` | diagrams.net (web) | Source for scoring pipeline |
+| `mitigation_2.drawio` | **Kiro CLI** | ACP mitigation flow (revised) |
+
+#### Diagram Tooling
+
+- **SVG files**: Hand-coded XML (no Python generation libraries)
+- **draw.io sources**: Created with [diagrams.net](https://diagrams.net) (web) or draw.io desktop (Electron)
+- **Kiro-generated**: 4 `.drawio` files (`*_2.drawio` suffix) were generated by [Kiro CLI](https://kiro.dev) (`agent="Kiro"` in mxfile metadata)
 
 ---
 
